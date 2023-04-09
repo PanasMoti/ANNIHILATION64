@@ -20,8 +20,16 @@ find_package(SQLite3 REQUIRED)
 #include_directories(${SQLITE3_INCLUDE_DIRS})
 
 # Add executable
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} main.cpp
+        config.h SDL_Text.h SDL_Text.cpp RenderWindow.h RenderWindow.cpp linalg.h BaseState.h EventManager.h EventManager.cpp StateManager.h StateManager.cpp Game.h Game.cpp)
 
 # Link libraries
-target_link_libraries(${PROJECT_NAME} SDL2::SDL2 ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${SQLITE3_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} SDL2::SDL2 SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf ${SQLITE3_LIBRARIES})
 
+add_custom_target(copy_assets
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/assets ${CMAKE_CURRENT_BINARY_DIR}/assets
+        )
+add_custom_target(copy_data
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/data ${CMAKE_CURRENT_BINARY_DIR}/data
+        )
+add_dependencies(${PROJECT_NAME} copy_assets copy_data)
