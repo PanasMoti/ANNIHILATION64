@@ -7,7 +7,7 @@ RenderWindow::RenderWindow(const char* title, int width, int height)
 	this->renderer = SDL_CreateRenderer(this->window, -1, SDL_RENDERER_ACCELERATED);
 }
 
-SDL_Texture* RenderWindow::loadTexture(const char* fileName)
+SDL_Texture* RenderWindow::loadSDL_Texture(const char* fileName)
 {
 	SDL_Texture* texture = IMG_LoadTexture(this->renderer, fileName);
 	return texture;
@@ -60,5 +60,25 @@ int2 RenderWindow::ScreenCenter() const {
     int x,y;
     SDL_GetWindowSize(window,&x,&y);
     return {x/2,y/2};
+}
+
+int2 RenderWindow::GetScreenSize() const {
+    int x,y;
+    SDL_GetWindowSize(window,&x,&y);
+    return {x,y};
+}
+
+Texture RenderWindow::loadTexture(const char *fileName) {
+    return Texture(fileName,renderer);
+}
+
+void RenderWindow::draw(const Texture& texture, int2 pos) {
+    SDL_Rect sdlRect {pos.x,pos.y,texture.GetWidth(),texture.GetHeight()};
+    SDL_RenderCopy(renderer,texture.SDL_Tex(), nullptr,&sdlRect);
+}
+
+void RenderWindow::draw(const Texture& texture, int x, int y) {
+    SDL_Rect sdlRect = {x,y,texture.GetWidth(),texture.GetHeight()};
+    SDL_RenderCopy(renderer,texture.SDL_Tex(), nullptr,&sdlRect);
 }
 

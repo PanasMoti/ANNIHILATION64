@@ -22,7 +22,8 @@ public:
     void Continue(EventDetails* l_details);
 private:
     TTF_Font* menu_font;
-    SDL_Texture* menu_logo;
+    Texture* menu_logo;
+    Texture* menu_background;
     SDL_Text text;
 };
 

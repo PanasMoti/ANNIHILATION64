@@ -20,7 +20,7 @@ Game::Game() :m_stateManager(&m_context) {
 
 Game::~Game() {
 
-	delete this->window;
+//	delete this->window;
 
 	// Making sure we close everything
 	// -----------------------------------
