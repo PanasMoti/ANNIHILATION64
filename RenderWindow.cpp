@@ -56,3 +56,9 @@ void RenderWindow::draw(SDL_Text text, int x, int y) {
 	SDL_DestroyTexture(texture);
 }
 
+int2 RenderWindow::ScreenCenter() const {
+    int x,y;
+    SDL_GetWindowSize(window,&x,&y);
+    return {x/2,y/2};
+}
+

@@ -5,9 +5,12 @@
 struct SDL_Text {
 	std::string text;
 	TTF_Font** font;
-	SDL_Color color;
-
-	SDL_Text(TTF_Font** font);
+	SDL_Color color{};
+    SDL_Text() {
+        font = nullptr;
+        text = "";
+    }
+	explicit SDL_Text(TTF_Font** font);
 	SDL_Text(TTF_Font** font, const std::string& text);
 	SDL_Text(TTF_Font** font, const std::string& text,SDL_Color color);
 

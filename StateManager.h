@@ -12,10 +12,10 @@ using StateFactory = std::unordered_map<StateType, std::function<BaseState* (voi
 class StateManager
 {
 public:
-	StateManager(SharedContext* l_shared);
+	explicit StateManager(SharedContext* l_shared);
 	~StateManager();
 
-	void Update();
+	void Update(float dt);
 	void Draw();
 
 	void ProcessRequests();

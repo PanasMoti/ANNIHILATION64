@@ -10,7 +10,9 @@ int main(int argc, char** argv) {
 	while (!game->shouldClose) {
 		game->update();
 		game->render();
+        game->lateUpdate();
 	}
+
 
 	delete game;
 	return 0;

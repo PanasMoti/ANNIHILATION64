@@ -1,8 +1,9 @@
 #include "StateManager.h"
-
+#include "State_MainMenu.h"
+#include <iostream>
 StateManager::StateManager(SharedContext* l_shared) : m_shared(l_shared)
 {
-	
+    RegisterState<State_MainMenu>(StateType::MainMenu);
 }
 
 StateManager::~StateManager() {
@@ -19,9 +20,9 @@ void StateManager::Draw() {
 
 
 
-void StateManager::Update() {
+void StateManager::Update(float dt) {
 	if (m_states.empty()) { return; }
-	m_states.back().second->Update();
+	m_states.back().second->Update(dt);
 }
 
 SharedContext* StateManager::GetContext() {
@@ -64,6 +65,10 @@ void StateManager::SwitchTo(const StateType& l_type) {
 			return;
 		}
 	}
+    // state with l_type wasn't found.
+    if(!m_states.empty()) {m_states.back().second->Deactivate();}
+    CreateState(l_type);
+    m_states.back().second->Activate();
 }
 
 void StateManager::CreateState(const StateType& l_type) {

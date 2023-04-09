@@ -19,7 +19,7 @@ public:
 	void draw(SDL_Text text, int x, int y);
 	void display();
 	int2 GetMousePosition() const;
-
+    int2 ScreenCenter() const;
 	
 	
 private:

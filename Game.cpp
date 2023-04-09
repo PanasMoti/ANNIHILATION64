@@ -50,7 +50,7 @@ void Game::update() {
 		m_eventManager.HandleEvent(event);
 	}
 	m_eventManager.Update();
-	m_stateManager.Update();
+	m_stateManager.Update(0.0f);
 }
 
 void Game::lateUpdate() {
