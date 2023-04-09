@@ -21,6 +21,7 @@ public:
 	void draw(SDL_Text text, int x, int y);
     void draw(const Texture& texture,int x,int y);
     void draw(const Texture& texture,int2 pos);
+    void draw(const Texture& texture);
 
 	void display();
 	int2 GetMousePosition() const;

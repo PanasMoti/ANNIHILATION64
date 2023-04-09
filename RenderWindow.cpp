@@ -82,3 +82,7 @@ void RenderWindow::draw(const Texture& texture, int x, int y) {
     SDL_RenderCopy(renderer,texture.SDL_Tex(), nullptr,&sdlRect);
 }
 
+void RenderWindow::draw(const Texture &texture) {
+    SDL_RenderCopy(renderer,texture.SDL_Tex(), nullptr, nullptr);
+}
+

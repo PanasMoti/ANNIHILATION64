@@ -29,7 +29,7 @@ void State_MainMenu::Update(float dt) {
 void State_MainMenu::Draw() {
     RenderWindow* window = m_stateMgr->GetContext()->window;
     int2 p = window->ScreenCenter();
-    window->draw(*menu_background,0,0);
+    window->draw(*menu_background);
     window->draw(*menu_logo,p.x - menu_logo->GetWidth()/2,-10);
     window->draw(text,p.x,p.y);
 }
