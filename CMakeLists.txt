@@ -23,5 +23,5 @@ find_package(SQLite3 REQUIRED)
 add_executable(${PROJECT_NAME} main.cpp)
 
 # Link libraries
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${SQLITE3_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} SDL2::SDL2 ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${SQLITE3_LIBRARIES})
 
