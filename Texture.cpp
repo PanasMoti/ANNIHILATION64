@@ -83,4 +83,9 @@ void Texture::Scale(float p) {
 
 }
 
+void Texture::Scale(float x, float y) {
+    this->size.x*=x;
+    this->size.y*=y;
+}
+
 

@@ -28,6 +28,7 @@ public:
     SDL_Texture* SDL_Tex() const;
     friend std::ostream& operator<<(std::ostream& os,const Texture& texture);
     void Scale(float p);
+    void Scale(float x,float y);
 private:
     SDL_Texture* pixels{};
     int2 size;

@@ -21,7 +21,8 @@ void State_MainMenu::OnCreate() {
     evMgr->AddCallback(StateType::MainMenu,"MainMenu_Continue",&State_MainMenu::Continue,this);
     evMgr->AddCallback(StateType::MainMenu,"Up_Arrow",&State_MainMenu::SelectUp,this);
     evMgr->AddCallback(StateType::MainMenu,"Down_Arrow",&State_MainMenu::SelectDown,this);
-//    this->menu_logo->Scale(2.2f);
+    this->menu_logo->Scale(1.5f,1.5f);
+
     menu_background = new Texture(m_stateMgr->GetContext()->window->loadTexture("assets/background.png"));
 }
 
