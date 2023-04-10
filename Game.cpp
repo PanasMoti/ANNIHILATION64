@@ -12,7 +12,12 @@ Game::Game() :m_stateManager(&m_context) {
 	window = new RenderWindow("ANNIHILATION64", 1280, 720);
 	shouldClose = false;
 	m_isFocused = true;
+
 	m_eventManager.AddCallback(StateType::MainMenu,"Window_close", &Game::close, this);
+    m_eventManager.AddCallback(StateType::GamePlay,"Window_close", &Game::close, this);
+    m_eventManager.AddCallback(StateType::LoadGame,"Window_close", &Game::close, this);
+    m_eventManager.AddCallback(StateType::GameOver,"Window_close", &Game::close, this);
+    m_eventManager.AddCallback(StateType::MapEdit,"Window_close", &Game::close, this);
 	m_context.window = window;
 	m_context.eventMgr = &m_eventManager;
 	m_stateManager.SwitchTo(StateType::MainMenu);

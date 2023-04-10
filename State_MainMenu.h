@@ -20,11 +20,17 @@ public:
     void Update(float dt) override;
     void Draw() override;
     void Continue(EventDetails* l_details);
+    void SelectUp(EventDetails* l_details);
+    void SelectDown(EventDetails* l_details);
 private:
     TTF_Font* menu_font;
+    TTF_Font* info_font;
     Texture* menu_logo;
     Texture* menu_background;
-    SDL_Text text;
+    SDL_Text text[3];
+    int selected;
+    SDL_Color selected_color,default_color;
+    SDL_Text info;
 };
 
 

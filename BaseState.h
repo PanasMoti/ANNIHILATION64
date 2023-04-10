@@ -33,7 +33,7 @@ enum class StateType {
 	GamePlay,
 	GameOver,
 	MapEdit,
-	PasswordInput
+	LoadGame
 };
 
 

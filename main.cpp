@@ -12,8 +12,6 @@ int main(int argc, char** argv) {
 		game->render();
         game->lateUpdate();
 	}
-
-
 	delete game;
 	return 0;
 }
