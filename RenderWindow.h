@@ -20,7 +20,7 @@ public:
 	void draw(SDL_Texture* texture);
 	void draw(SDL_Text text, int x, int y);
     void draw(SDL_Text text,int2 pos);
-    void draw(SDL_Text text,int x,int y, Uint32 wrappedlen);
+    void draw(SDL_Text text,int x,int y, Uint32 wrappedlen,SDL_Rect* rect = nullptr);
     void draw(const Texture& texture,int x,int y);
     void draw(const Texture& texture,int2 pos);
     void draw(const Texture& texture);

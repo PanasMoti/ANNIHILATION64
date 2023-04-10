@@ -128,12 +128,18 @@ void RenderWindow::draw(SDL_Text text, int2 pos) {
     this->draw(text,pos.x,pos.y);
 }
 
-void RenderWindow::draw(SDL_Text text, int x, int y, Uint32 wrappedlen) {
+void RenderWindow::draw(SDL_Text text, int x, int y, Uint32 wrappedlen,SDL_Rect* rect) {
     SDL_Surface* surface = TTF_RenderText_Solid_Wrapped(*text.font,text.text.c_str(),text.color,wrappedlen);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_Rect r; r.x = x; r.y = y; r.w = surface->w; r.h = surface->h;
     r.x -= r.w/2;
     r.y -= r.h/2;
+    if(rect != nullptr) {
+        rect->x = r.x;
+        rect->y = r.y;
+        rect->h = r.h;
+        rect->w = r.w;
+    }
     std::cout << r.x << "," << r.y << "," << r.w << "," << r.h << std::endl;
     SDL_FreeSurface(surface);
     SDL_RenderCopy(renderer, texture, nullptr, &r);

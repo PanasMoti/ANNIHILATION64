@@ -66,8 +66,10 @@ void State_LoadGame::Draw() {
     window->draw(rect,SDL_Color{255,255,255,255},true);
     window->draw_guidlines({255,64,255,255});
     if(password.first.length()-1 < max_pass_len) {
-        window->draw(user_input,center.x,rect.y+400,user_font_size*9);
-        SDL_Rect selected_char = {674+64*selectedX,549+selectedY*83,64,83};
+        SDL_Rect size;
+        window->draw(user_input,center.x,rect.y+400,user_font_size*9,&size);
+        int pw = size.w/9; int ph = size.h/4;
+        SDL_Rect selected_char = {size.x+pw*selectedX,size.y+selectedY*ph,pw,ph};
         window->draw(selected_char,{255,255,64,255});
     } else {
         window->draw(SDL_Text(&info_font,"press [space] to continue",{255,64,64,255}),center.x,center.y+100);
