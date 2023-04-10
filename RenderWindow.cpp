@@ -140,7 +140,7 @@ void RenderWindow::draw(SDL_Text text, int x, int y, Uint32 wrappedlen,SDL_Rect*
         rect->h = r.h;
         rect->w = r.w;
     }
-    std::cout << r.x << "," << r.y << "," << r.w << "," << r.h << std::endl;
+//    std::cout << r.x << "," << r.y << "," << r.w << "," << r.h << std::endl;
     SDL_FreeSurface(surface);
     SDL_RenderCopy(renderer, texture, nullptr, &r);
     SDL_DestroyTexture(texture);
