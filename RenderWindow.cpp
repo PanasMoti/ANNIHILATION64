@@ -155,3 +155,10 @@ void RenderWindow::draw_text_uncentered(SDL_Text text, int x, int y) {
     SDL_DestroyTexture(texture);
 }
 
+void RenderWindow::close() {
+    SDL_DestroyWindow(window);
+    SDL_DestroyRenderer(renderer);
+    window = nullptr;
+    renderer = nullptr;
+}
+

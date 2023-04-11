@@ -13,7 +13,7 @@ void State_LoadGame::OnCreate() {
     letters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     time_passed = 0.0f; selectedX = 0; selectedY = 0; user_font_size = 64;
     menu_font = m_stateMgr->GetContext()->window->loadFont("assets/Doom2016.ttf",160);
-    info_font = m_stateMgr->GetContext()->window->loadFont("assets/Emulogic.ttf",32);
+    info_font = m_stateMgr->GetContext()->window->loadFont("assets/YosterIsland.ttf",32);
     user_font = m_stateMgr->GetContext()->window->loadFont("assets/Emulogic.ttf",user_font_size);
     menu_text = SDL_Text(&menu_font,"enter a password to load a game",SDL_Color{255,255,255,255});
     user_input = SDL_Text(&user_font,letters,SDL_Color{255,255,255,255});
@@ -28,7 +28,7 @@ void State_LoadGame::OnCreate() {
     evMgr->AddCallback(StateType::LoadGame,"LoadGame_Enter_Flip",&State_LoadGame::flip,this);
     evMgr->AddCallback(StateType::LoadGame,"LoadGame_Backspace",&State_LoadGame::Backspace,this);
     password.second = SDL_Text(&user_font," ",SDL_Color{0,0,0,255});
-    password.first = ":";
+    password.first = "enter here";
 }
 
 void State_LoadGame::OnDestroy() {
@@ -101,6 +101,7 @@ void State_LoadGame::SelectRight(EventDetails *l_details) {
 void State_LoadGame::PressSelected(EventDetails *l_details) {
     if(!toggle) return;
     if(password.first.length() > max_pass_len) return;
+    if(password.first == "enter here") password.first = "";
     password.first += letters[selectedX + selectedY*9];
 }
 
@@ -109,6 +110,7 @@ void State_LoadGame::flip(EventDetails *l_details) {
 }
 
 void State_LoadGame::Backspace(EventDetails *l_details) {
-    if(password.first.length() == 1) return;
-    password.first.pop_back();
+    if(password.first == "enter here") return;
+    if(password.first.length() == 1) password.first = "enter here";
+    else password.first.pop_back();
 }

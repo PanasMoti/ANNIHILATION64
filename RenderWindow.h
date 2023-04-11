@@ -15,6 +15,7 @@ public:
 	SDL_Texture* loadSDL_Texture(const char* fileName);
 	TTF_Font* loadFont(const char* fileName, int size = 32);
     Texture loadTexture(const char* fileName);
+    void close();
     ~RenderWindow();
 	void clear_screen();
 	void draw(SDL_Texture* texture);

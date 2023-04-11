@@ -2,10 +2,12 @@
 #include "State_MainMenu.h"
 #include "State_LoadGame.h"
 #include <iostream>
+#include "State_MapEdit.h"
 StateManager::StateManager(SharedContext* l_shared) : m_shared(l_shared)
 {
     RegisterState<State_MainMenu>(StateType::MainMenu);
     RegisterState<State_LoadGame>(StateType::LoadGame);
+    RegisterState<State_MapEdit>(StateType::MapEdit);
 
 }
 

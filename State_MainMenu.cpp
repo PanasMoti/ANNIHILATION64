@@ -11,7 +11,7 @@ void State_MainMenu::OnCreate() {
     selected_color = SDL_Color {255,255,0,255};
     default_color = SDL_Color {255,64,64,255};
     menu_font = m_stateMgr->GetContext()->window->loadFont("assets/Doom2016.ttf",160);
-    info_font = m_stateMgr->GetContext()->window->loadFont("assets/Emulogic.ttf", 32);
+    info_font = m_stateMgr->GetContext()->window->loadFont("assets/YosterIsland.ttf", 32);
     text[0] = SDL_Text(&menu_font,"new game",default_color);
     text[1] = SDL_Text(&menu_font,"load game",default_color);
     text[2] = SDL_Text(&menu_font,"custom game", default_color);
