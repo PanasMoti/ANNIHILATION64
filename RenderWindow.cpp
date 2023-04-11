@@ -162,3 +162,14 @@ void RenderWindow::close() {
     renderer = nullptr;
 }
 
+void RenderWindow::draw(const char *str, TTF_Font *font, int x, int y, SDL_Color color) {
+    SDL_Surface* surface = TTF_RenderText_Solid(font,str,color);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_Rect r; r.x = x; r.y = y; r.w = surface->w; r.h = surface->h;
+    r.x -= r.w/2;
+    r.y -= r.h/2;
+    SDL_FreeSurface(surface);
+    SDL_RenderCopy(renderer, texture, nullptr, &r);
+    SDL_DestroyTexture(texture);
+}
+

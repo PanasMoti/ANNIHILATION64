@@ -9,7 +9,7 @@ State_LoadGame::State_LoadGame(StateManager *l_stateManager) : BaseState(l_state
 }
 
 void State_LoadGame::OnCreate() {
-    this->toggle = false;
+    this->enter_guard = false;
     letters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     time_passed = 0.0f; selectedX = 0; selectedY = 0; user_font_size = 64;
     menu_font = m_stateMgr->GetContext()->window->loadFont("assets/Doom2016.ttf",160);
@@ -99,14 +99,14 @@ void State_LoadGame::SelectRight(EventDetails *l_details) {
 }
 
 void State_LoadGame::PressSelected(EventDetails *l_details) {
-    if(!toggle) return;
+    if(!enter_guard) return;
     if(password.first.length() > max_pass_len) return;
     if(password.first == "enter here") password.first = "";
     password.first += letters[selectedX + selectedY*9];
 }
 
 void State_LoadGame::flip(EventDetails *l_details) {
-    this->toggle = true;
+    this->enter_guard = true;
 }
 
 void State_LoadGame::Backspace(EventDetails *l_details) {

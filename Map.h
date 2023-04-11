@@ -28,6 +28,10 @@ static std::ostream& operator<<(std::ostream& os, const CellType& cellType) {
     char const *rets[] = {"Empty","Wall","Door","PlayerSpawn","EnemySpawn","ItemSpawn","LevelEnd"};
     return os << rets[static_cast<int>(cellType)];
 }
+static std::string ToString(const CellType& cellType) {
+    char const *rets[] = {"Empty","Wall","Door","PlayerSpawn","EnemySpawn","ItemSpawn","LevelEnd"};
+    return rets[static_cast<int>(cellType)];
+}
 
 
 using CellGrid = std::vector<std::vector<CellType>>;
@@ -36,11 +40,11 @@ static SDL_Color ToColor(const CellType& cell) {
     SDL_Color rets[] = {
             {128,128,128,255}, // Empty -> Gray
             {255,255,255,255}, // Wall -> White
-            {255,255,0,255}, // Door -> Yellow
+            {255,0,255,255}, // Door -> Purple
             {0,255,0,255}, // PlayerSpawn -> Green
             {255,0,0,255}, // EnemySpawn -> Red,
             {0,0,255,255}, // ItemSpawn -> Blue,
-            {255,192,203} // LevelEnd -> Pink
+            {255,165,0} // LevelEnd -> Orange
     };
     return rets[static_cast<int>(cell)];
 }

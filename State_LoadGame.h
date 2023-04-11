@@ -42,7 +42,7 @@ private:
     int selectedX,selectedY;
     std::string letters;
     const int max_pass_len = 17;
-    bool toggle;
+    bool enter_guard;
 };
 
 

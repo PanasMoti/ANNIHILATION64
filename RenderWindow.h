@@ -25,6 +25,7 @@ public:
     void draw(const Texture& texture,int x,int y);
     void draw(const Texture& texture,int2 pos);
     void draw(const Texture& texture);
+    void draw(const char* str,TTF_Font* font,int x,int y,SDL_Color color);
     void draw_text_uncentered(SDL_Text text,int x,int y);
     void draw(SDL_Rect sdlRect,SDL_Color color,bool filled = false);
     void draw_guidlines(const SDL_Color& sdlColor);
