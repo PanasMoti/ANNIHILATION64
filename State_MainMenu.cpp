@@ -33,7 +33,9 @@ void State_MainMenu::OnDestroy() {
     evMgr->RemoveCallback(StateType::MainMenu,"MainMenu_Continue");
     evMgr->RemoveCallback(StateType::MainMenu,"Up_Arrow");
     evMgr->RemoveCallback(StateType::MainMenu,"Down_Arrow");
+
 }
+
 
 void State_MainMenu::Update(float dt) {
     time_passed += dt;
@@ -52,7 +54,7 @@ void State_MainMenu::Draw() {
                      true);
     }
     window->draw(info,info_font,p.x,2*p.y-100,700,{255,255,255,255},true);
-    window->draw_guidlines({255,64,255,255});
+//    window->draw_guidlines({255,64,255,255});
 }
 
 void State_MainMenu::Continue(EventDetails *l_details) {

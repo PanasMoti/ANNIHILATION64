@@ -44,7 +44,7 @@ static SDL_Color ToColor(const CellType& cell) {
             {0,255,0,255}, // PlayerSpawn -> Green
             {255,0,0,255}, // EnemySpawn -> Red,
             {0,0,255,255}, // ItemSpawn -> Blue,
-            {255,165,0} // LevelEnd -> Orange
+            {255,165,0,255} // LevelEnd -> Orange
     };
     return rets[static_cast<int>(cell)];
 }
@@ -77,6 +77,7 @@ static void ChangeSize(CellGrid* grid,int w,int h) {
 
 class Map {
 public:
+    Map() = default;
     explicit Map(int2 _size);
     Map(int width,int height);
     int2 GetSize() const;

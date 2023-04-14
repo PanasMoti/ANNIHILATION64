@@ -6,6 +6,7 @@
 
 
 int main(int argc, char** argv) {
+    srand(time(nullptr));
 	Game* game = new Game();
 	while (!game->shouldClose) {
 		game->update();

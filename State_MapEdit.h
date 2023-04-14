@@ -6,7 +6,7 @@
 #define ANNIHILATION64_STATE_MAPEDIT_H
 #include "StateManager.h"
 #include "Map.h"
-
+#include <sqlite3.h>
 class State_MapEdit : public BaseState{
 public:
     State_MapEdit(StateManager* l_stateManager);
@@ -23,9 +23,11 @@ public:
     void SelectLeft(EventDetails* l_details);
     void SelectRight(EventDetails* l_details);
     void PressSelected(EventDetails* l_details);
+    void SaveMap(EventDetails* l_details);
+
     void flip(EventDetails* l_details);
 private:
-    Map* map;
+    Map map;
     TTF_Font* menu_font;
     std::string menu_text;
     TTF_Font* info_font;
@@ -34,6 +36,9 @@ private:
     bool enter_guard;
     SDL_Color pointer_color;
     std::string index_text;
+    sqlite3* DB;
+    std::string custom_pass;
+    bool written_to_db;
 };
 
 

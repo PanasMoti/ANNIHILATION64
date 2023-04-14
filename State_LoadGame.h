@@ -42,6 +42,7 @@ private:
     std::string letters;
     const int max_pass_len = 17;
     bool enter_guard;
+
 };
 
 

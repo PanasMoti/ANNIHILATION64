@@ -64,7 +64,7 @@ void State_LoadGame::Draw() {
 
     window->draw(menu_text,menu_font,center.x,center.y-350,{255,255,255,255},true);
     window->draw(rect,SDL_Color{255,255,255,255},true);
-    window->draw_guidlines({255,64,255,255});
+//    window->draw_guidlines({255,64,255,255});
     if(password.length() < max_pass_len) {
         SDL_Rect size;
         window->draw(keyboard_text,user_font, center.x, rect.y + 350, user_font_size * 9,{255,255,255,255},true, &size);

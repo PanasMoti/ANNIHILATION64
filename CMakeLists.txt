@@ -34,7 +34,7 @@ add_executable(${PROJECT_NAME} main.cpp
         Map.cpp Map.h)
 
 # Link libraries
-target_link_libraries(${PROJECT_NAME} SDL2::SDL2 SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf ${SQLITE3_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} SDL2::SDL2 SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf sqlite3)
 
 add_custom_target(copy_assets
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/assets ${CMAKE_CURRENT_BINARY_DIR}/assets
