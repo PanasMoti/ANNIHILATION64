@@ -27,10 +27,10 @@ private:
     TTF_Font* info_font;
     Texture* menu_logo;
     Texture* menu_background;
-    SDL_Text text[3];
+    std::string options[3];
     int selected;
     SDL_Color selected_color,default_color;
-    SDL_Text info;
+    std::string info;
 };
 
 

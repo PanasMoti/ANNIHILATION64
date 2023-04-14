@@ -185,3 +185,71 @@ void RenderWindow::destroy() {
 
 }
 
+void RenderWindow::draw(const std::string &txt, TTF_Font *font, int x, int y, SDL_Color color, bool isCentered) {
+    SDL_Surface* surface = TTF_RenderText_Solid(font,txt.c_str(),color);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer,surface);
+    SDL_Rect r; r.x = x; r.y = y; r.w = surface->w; r.h = surface->h;
+    if(isCentered) {
+        r.x -= r.w/2;
+        r.y -= r.h/2;
+    }
+    SDL_FreeSurface(surface);
+    SDL_RenderCopy(renderer, texture, nullptr, &r);
+    SDL_DestroyTexture(texture);
+}
+
+void RenderWindow::draw(const std::string &txt, TTF_Font *font, int2 pos, SDL_Color color, bool isCentered) {
+    SDL_Surface* surface = TTF_RenderText_Solid(font,txt.c_str(),color);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer,surface);
+    SDL_Rect r; r.x = pos.x; r.y = pos.y; r.w = surface->w; r.h = surface->h;
+    if(isCentered) {
+        r.x -= r.w/2;
+        r.y -= r.h/2;
+    }
+    SDL_FreeSurface(surface);
+    SDL_RenderCopy(renderer, texture, nullptr, &r);
+    SDL_DestroyTexture(texture);
+
+}
+
+void RenderWindow::draw(const std::string &txt, TTF_Font *font, int2 pos, Uint32 wrappedlen,SDL_Color color, bool isCentered,SDL_Rect *rect) {
+    SDL_Surface* surface = TTF_RenderText_Solid_Wrapped(font,txt.c_str(),color,wrappedlen);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_Rect r; r.x = pos.x; r.y = pos.y; r.w = surface->w; r.h = surface->h;
+    if(isCentered) {
+        r.x -= r.w/2;
+        r.y -= r.h/2;
+    }
+    if(rect != nullptr) {
+        rect->x = r.x;
+        rect->y = r.y;
+        rect->h = r.h;
+        rect->w = r.w;
+    }
+//    std::cout << r.x << "," << r.y << "," << r.w << "," << r.h << std::endl;
+    SDL_FreeSurface(surface);
+    SDL_RenderCopy(renderer, texture, nullptr, &r);
+    SDL_DestroyTexture(texture);
+}
+
+void RenderWindow::draw(const std::string &txt, TTF_Font *font, int x, int y, Uint32 wrappedlen, SDL_Color color,
+                        bool isCentered,SDL_Rect *rect) {
+    SDL_Surface* surface = TTF_RenderText_Solid_Wrapped(font,txt.c_str(),color,wrappedlen);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_Rect r; r.x = x; r.y = y; r.w = surface->w; r.h = surface->h;
+    if(isCentered) {
+        r.x -= r.w/2;
+        r.y -= r.h/2;
+    }
+    if(rect != nullptr) {
+        rect->x = r.x;
+        rect->y = r.y;
+        rect->h = r.h;
+        rect->w = r.w;
+    }
+//    std::cout << r.x << "," << r.y << "," << r.w << "," << r.h << std::endl;
+    SDL_FreeSurface(surface);
+    SDL_RenderCopy(renderer, texture, nullptr, &r);
+    SDL_DestroyTexture(texture);
+}
+

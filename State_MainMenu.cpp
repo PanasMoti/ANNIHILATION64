@@ -12,10 +12,8 @@ void State_MainMenu::OnCreate() {
     default_color = SDL_Color {255,64,64,255};
     menu_font = m_stateMgr->GetContext()->window->loadFont("assets/Doom2016.ttf",160);
     info_font = m_stateMgr->GetContext()->window->loadFont("assets/YosterIsland.ttf", 32);
-    text[0] = SDL_Text(&menu_font,"new game",default_color);
-    text[1] = SDL_Text(&menu_font,"load game",default_color);
-    text[2] = SDL_Text(&menu_font,"custom game", default_color);
-    info = SDL_Text(&info_font, "press [ESC] to quit", SDL_Color{255, 255, 255, 255});
+    options[0] = "new game"; options[1] = "load game"; options[2] = "custom game";
+    info = "press [ESC] to quit\npress [ENTER] to confirm\nuse the [UP] and [DOWN] arrows to move your select";
     menu_logo = new Texture(m_stateMgr->GetContext()->window->loadTexture("assets/logo.png"));
     EventManager* evMgr = m_stateMgr->GetContext()->eventMgr;
     evMgr->AddCallback(StateType::MainMenu,"MainMenu_Continue",&State_MainMenu::Continue,this);
@@ -39,23 +37,21 @@ void State_MainMenu::OnDestroy() {
 
 void State_MainMenu::Update(float dt) {
     time_passed += dt;
-    for(int i = 0; i < 3; i++) {
-        if(i == selected) {
-            text[i].color = selected_color;
-        } else {
-            text[i].color = default_color;
-        }
-    }
+
 }
 void State_MainMenu::Draw() {
     RenderWindow* window = m_stateMgr->GetContext()->window;
     int2 p = window->ScreenCenter();
-//    window->draw(*menu_background);
     window->draw(*menu_logo,p.x - menu_logo->GetWidth()/2,-10);
     for(int i = 0; i < 3; i++) {
-        window->draw(text[i],p.x,p.y-150*(3-i) + 300);
+        window->draw(options[i],
+                     menu_font,
+                     p.x,p.y-150*(3-i) + 300,
+                     (i==selected)?
+                        selected_color : default_color,
+                     true);
     }
-    window->draw(info,p.x,2*p.y-100);
+    window->draw(info,info_font,p.x,2*p.y-200,500,{255,255,255,255},true);
     window->draw_guidlines({255,64,255,255});
 }
 
