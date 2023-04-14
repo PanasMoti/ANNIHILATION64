@@ -13,7 +13,7 @@ void State_MainMenu::OnCreate() {
     menu_font = m_stateMgr->GetContext()->window->loadFont("assets/Doom2016.ttf",160);
     info_font = m_stateMgr->GetContext()->window->loadFont("assets/YosterIsland.ttf", 32);
     options[0] = "new game"; options[1] = "load game"; options[2] = "custom game";
-    info = "press [ESC] to quit\npress [ENTER] to confirm\nuse the [UP] and [DOWN] arrows to move your select";
+    info = ">press [ESC] to quit\n>press [ENTER] to confirm\n>use [UP] and [DOWN] arrows to move";
     menu_logo = new Texture(m_stateMgr->GetContext()->window->loadTexture("assets/logo.png"));
     EventManager* evMgr = m_stateMgr->GetContext()->eventMgr;
     evMgr->AddCallback(StateType::MainMenu,"MainMenu_Continue",&State_MainMenu::Continue,this);
@@ -51,7 +51,7 @@ void State_MainMenu::Draw() {
                         selected_color : default_color,
                      true);
     }
-    window->draw(info,info_font,p.x,2*p.y-200,500,{255,255,255,255},true);
+    window->draw(info,info_font,p.x,2*p.y-100,700,{255,255,255,255},true);
     window->draw_guidlines({255,64,255,255});
 }
 
