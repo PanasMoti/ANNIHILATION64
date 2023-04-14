@@ -70,3 +70,12 @@ bool Game::IsFocused()
 void Game::close(EventDetails* l_details) {
 	this->shouldClose = true;
 }
+
+void Game::destroy() {
+    this->window->destroy();
+    delete this->window;
+    SDL_Quit();
+    IMG_Quit();
+    TTF_Quit();
+
+}

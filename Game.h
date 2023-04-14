@@ -17,6 +17,7 @@ public:
 	void update();
 	void lateUpdate();
 	bool IsFocused();
+    void destroy();
 private:
 	RenderWindow* window;
 	EventManager m_eventManager;

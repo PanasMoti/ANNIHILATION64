@@ -33,6 +33,7 @@ public:
 	int2 GetMousePosition() const;
     int2 ScreenCenter() const;
     int2 GetScreenSize() const;
+    void destroy();
 
 	
 private:

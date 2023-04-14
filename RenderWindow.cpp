@@ -4,7 +4,13 @@ RenderWindow::RenderWindow(const char* title, int width, int height)
 {
 	this->window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height,
 		SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN_DESKTOP);
-	this->renderer = SDL_CreateRenderer(this->window, -1, SDL_RENDERER_ACCELERATED);
+	this->renderer = SDL_CreateRenderer(this->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    SDL_Surface* icon;
+    icon = IMG_Load("assets/icon.png");
+    SDL_SetWindowIcon(window,icon);
+    SDL_FreeSurface(icon);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 }
 
 SDL_Texture* RenderWindow::loadSDL_Texture(const char* fileName)
@@ -171,5 +177,11 @@ void RenderWindow::draw(const char *str, TTF_Font *font, int x, int y, SDL_Color
     SDL_FreeSurface(surface);
     SDL_RenderCopy(renderer, texture, nullptr, &r);
     SDL_DestroyTexture(texture);
+}
+
+void RenderWindow::destroy() {
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+
 }
 
