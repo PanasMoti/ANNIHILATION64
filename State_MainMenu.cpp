@@ -90,3 +90,9 @@ void State_MainMenu::SelectDown(EventDetails *l_details) {
 
 }
 
+void State_MainMenu::Activate() {
+
+}
+void State_MainMenu::Deactivate() {
+
+}

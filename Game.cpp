@@ -23,17 +23,6 @@ Game::Game() :m_stateManager(&m_context) {
 	m_stateManager.SwitchTo(StateType::MainMenu);
 }
 
-Game::~Game() {
-
-	delete this->window;
-
-	// Making sure we close everything
-	// -----------------------------------
-	SDL_Quit();
-	IMG_Quit();
-	TTF_Quit();
-	// -----------------------------------
-}
 
 void Game::render() {
 	window->clear_screen();
@@ -55,7 +44,8 @@ void Game::update() {
 		m_eventManager.HandleEvent(event);
 	}
 	m_eventManager.Update();
-	m_stateManager.Update(0.0f);
+	m_stateManager.Update(clock.delta * 0.001);
+    clock.tick();
 }
 
 void Game::lateUpdate() {
@@ -77,5 +67,12 @@ void Game::destroy() {
     SDL_Quit();
     IMG_Quit();
     TTF_Quit();
+    this->m_stateManager.Remove(StateType::MainMenu);
+    this->m_stateManager.Remove(StateType::MapEdit);
+    this->m_stateManager.Remove(StateType::LoadGame);
+    this->m_stateManager.Remove(StateType::GamePlay);
+    this->m_stateManager.Remove(StateType::GameOver);
 
 }
+
+

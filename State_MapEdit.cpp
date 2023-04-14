@@ -9,8 +9,7 @@
 
 State_MapEdit::State_MapEdit(StateManager *l_stateManager) : BaseState(l_stateManager) {
     OnCreate();
-    sqlite3_open("../data/storage.db",&DB);
-    custom_pass = random_string(17);
+    custom_pass = random_string(rand()%17 + 1);
 }
 
 void State_MapEdit::OnCreate() {
@@ -52,6 +51,7 @@ void State_MapEdit::OnDestroy() {
 
 void State_MapEdit::Update(float dt) {
     time_passed+=dt;
+
 
 }
 
@@ -163,9 +163,18 @@ void State_MapEdit::SaveMap(EventDetails *l_details) {
                         std::to_string(map.GetHeight()) + ",'" + str +"',3,50);");
         char* errmsg;
         e = sqlite3_exec(DB,sql.c_str(), nullptr,0,&errmsg);
-        if(e != SQLITE_OK) custom_pass = random_string(17);
+        if(e != SQLITE_OK) custom_pass = random_string(rand()%17 + 1);
     }while(e != SQLITE_OK);
-//    std::string sql("INSERT INTO GAME VALUES('FULLHPLEVEL000001',"+ std::to_string(map.GetWidth()) + "," + std::to_string(map.GetHeight()) + ",'" + str +"',3,50);");
-//    sqlite3_exec(DB,sql.c_str(), nullptr,0, nullptr);
 }
 
+void State_MapEdit::Activate() {
+    sqlite3_open("../data/storage.db",&DB);
+    map.SetSize(map.GetSize());
+    written_to_db = false;
+    custom_pass = random_string(rand()%17 + 1);
+    enter_guard = false;
+}
+
+void State_MapEdit::Deactivate() {
+    sqlite3_close(DB);
+}

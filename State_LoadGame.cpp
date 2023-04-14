@@ -3,13 +3,14 @@
 //
 
 #include "State_LoadGame.h"
+#include <iostream>
 
 State_LoadGame::State_LoadGame(StateManager *l_stateManager) : BaseState(l_stateManager) {
     OnCreate();
 }
 
 void State_LoadGame::OnCreate() {
-    this->enter_guard = false;
+    this->enter_guard = false; IsFoundInDB = false; showErrorMsg = false;
     letters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     time_passed = 0.0f; selectedX = 0; selectedY = 0; user_font_size = 64;
     menu_font = m_stateMgr->GetContext()->window->loadFont("assets/Doom2016.ttf",160);
@@ -18,7 +19,7 @@ void State_LoadGame::OnCreate() {
     menu_text = "enter a password to load a game";
     keyboard_text = letters;
 
-    info_text = ">press [z] to return to the menu\n>press [BACKSPACE] to delete\n>press [ENTER] to confirm\n>use the [ARROWS] to move";
+    info_text = ">press [z] to return to the menu\n>press [BACKSPACE] to delete\n>press [ENTER] to confirm\n>press [SPACE] to submit";
     EventManager* evMgr = m_stateMgr->GetContext()->eventMgr;
     evMgr->AddCallback(StateType::LoadGame,"Return_To_Menu",&State_LoadGame::ReturnToMenu,this);
     evMgr->AddCallback(StateType::LoadGame,"Up_Arrow",&State_LoadGame::SelectUp,this);
@@ -28,6 +29,7 @@ void State_LoadGame::OnCreate() {
     evMgr->AddCallback(StateType::LoadGame, "LoadGame_Press_Selected", &State_LoadGame::PressSelected, this);
     evMgr->AddCallback(StateType::LoadGame,"LoadGame_Enter_Flip",&State_LoadGame::flip,this);
     evMgr->AddCallback(StateType::LoadGame,"LoadGame_Backspace",&State_LoadGame::Backspace,this);
+    evMgr->AddCallback(StateType::LoadGame,"LoadGame_Submit",&State_LoadGame::SubmitInput,this);
     password = "";
 }
 
@@ -44,11 +46,19 @@ void State_LoadGame::OnDestroy() {
     evMgr->RemoveCallback(StateType::LoadGame,"LoadGame_Press_Selected");
     evMgr->RemoveCallback(StateType::LoadGame,"LoadGame_Enter_Flip");
     evMgr->RemoveCallback(StateType::LoadGame,"LoadGame_Backspace");
+    evMgr->RemoveCallback(StateType::LoadGame,"LoadGame_Submit");
 }
 
 void State_LoadGame::Update(float dt) {
     time_passed+=dt;
-
+    auto f = fmod(time_passed,2.0f);
+    if(f >= 1.5f) {
+        showErrorMsg = false;
+        time_passed = 0.0f;
+    }
+    if(IsFoundInDB) {
+        m_stateMgr->SwitchTo(StateType::GamePlay);
+    }
 }
 
 void State_LoadGame::ReturnToMenu(EventDetails *l_details) {
@@ -65,7 +75,7 @@ void State_LoadGame::Draw() {
     window->draw(menu_text,menu_font,center.x,center.y-350,{255,255,255,255},true);
     window->draw(rect,SDL_Color{255,255,255,255},true);
 //    window->draw_guidlines({255,64,255,255});
-    if(password.length() < max_pass_len) {
+    if(password.empty() || password.length()-1 < max_pass_len-1) {
         SDL_Rect size;
         window->draw(keyboard_text,user_font, center.x, rect.y + 350, user_font_size * 9,{255,255,255,255},true, &size);
         int pw = size.w/9; int ph = size.h/4;
@@ -76,6 +86,9 @@ void State_LoadGame::Draw() {
     }
     window->draw(password.empty() ? "enter here" : password,user_font,rect.x+10,rect.y+32,{0,0,0,255},false);
     window->draw(info_text,info_font,center.x,2*center.y-100,700,{192,192,192,255},true);
+    if(!IsFoundInDB && showErrorMsg) {
+        window->draw("password not found!",info_font,center.x,center.y-200,{255,0,0,255},true);
+    }
 }
 
 void State_LoadGame::SelectUp(EventDetails *l_details) {
@@ -110,4 +123,36 @@ void State_LoadGame::flip(EventDetails *l_details) {
 
 void State_LoadGame::Backspace(EventDetails *l_details) {
     if(password.length() != 0) password.pop_back();
+}
+void State_LoadGame::Activate() {
+    enter_guard = false;
+    sqlite3_open("../data/storage.db",&DB);
+}
+void State_LoadGame::Deactivate() {
+    sqlite3_close(DB);
+}
+
+void State_LoadGame::SubmitInput(EventDetails *l_details) {
+    showErrorMsg = true;
+    std::string query = "SELECT * FROM GAME WHERE PASSWORD='" + password + "';";
+    const std::string* data;
+    char *errmsg;
+    sqlite3_exec(DB,query.c_str(),State_LoadGame::callback,(void*)&data,&errmsg);
+    if(DataBase_Response::self().str.empty()) {
+        IsFoundInDB = false;
+    } else {
+        IsFoundInDB = true;
+    }
+    std::cout << DataBase_Response::self().str << std::endl;
+}
+
+int State_LoadGame::callback(void *data, int argc, char **argv, char **azColName) {
+    int i;
+    DataBase_Response& tmp = DataBase_Response::self();
+//    fprintf(stderr, "%s: ", (const char*)data);
+    for(i = 0; i<argc; i++){
+        tmp.str += std::string(azColName[i]) + " = " + (argv[i] ? argv[i] : "NULL") + "\n";
+    }
+
+    return 0;
 }

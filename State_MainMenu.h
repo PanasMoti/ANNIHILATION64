@@ -14,8 +14,8 @@ public:
 
     void OnCreate() override;
     void OnDestroy() override;
-    void Activate() override {}
-    void Deactivate() override {}
+    void Activate() override;
+    void Deactivate() override;
     void Update(float dt) override;
     void Draw() override;
     void Continue(EventDetails* l_details);
