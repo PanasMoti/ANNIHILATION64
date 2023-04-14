@@ -21,7 +21,17 @@ find_package(SQLite3 REQUIRED)
 
 # Add executable
 add_executable(${PROJECT_NAME} main.cpp
-        config.h SDL_Text.h SDL_Text.cpp RenderWindow.h RenderWindow.cpp linalg.h BaseState.h EventManager.h EventManager.cpp StateManager.h StateManager.cpp Game.h Game.cpp State_MainMenu.cpp State_MainMenu.h Texture.cpp Texture.h State_LoadGame.cpp State_LoadGame.h State_MapEdit.cpp State_MapEdit.h Map.cpp Map.h)
+        config.h
+        RenderWindow.h RenderWindow.cpp
+        linalg.h BaseState.h
+        EventManager.h EventManager.cpp
+        StateManager.h StateManager.cpp
+        Game.h Game.cpp
+        State_MainMenu.cpp State_MainMenu.h
+        Texture.cpp Texture.h
+        State_LoadGame.cpp State_LoadGame.h
+        State_MapEdit.cpp State_MapEdit.h
+        Map.cpp Map.h)
 
 # Link libraries
 target_link_libraries(${PROJECT_NAME} SDL2::SDL2 SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf ${SQLITE3_LIBRARIES})

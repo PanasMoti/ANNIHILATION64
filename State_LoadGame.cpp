@@ -15,9 +15,10 @@ void State_LoadGame::OnCreate() {
     menu_font = m_stateMgr->GetContext()->window->loadFont("assets/Doom2016.ttf",160);
     info_font = m_stateMgr->GetContext()->window->loadFont("assets/YosterIsland.ttf",32);
     user_font = m_stateMgr->GetContext()->window->loadFont("assets/Emulogic.ttf",user_font_size);
-    menu_text = SDL_Text(&menu_font,"enter a password to load a game",SDL_Color{255,255,255,255});
-    user_input = SDL_Text(&user_font,letters,SDL_Color{255,255,255,255});
-    info_text = SDL_Text(&info_font,"press [Z] to return to the menu",SDL_Color{192,192,192,255});
+    menu_text = "enter a password to load a game";
+    keyboard_text = letters;
+
+    info_text = ">press [z] to return to the menu\n>press [BACKSPACE] to delete\n>press [ENTER] to confirm\n>use the [ARROWS] to move";
     EventManager* evMgr = m_stateMgr->GetContext()->eventMgr;
     evMgr->AddCallback(StateType::LoadGame,"Return_To_Menu",&State_LoadGame::ReturnToMenu,this);
     evMgr->AddCallback(StateType::LoadGame,"Up_Arrow",&State_LoadGame::SelectUp,this);
@@ -27,8 +28,7 @@ void State_LoadGame::OnCreate() {
     evMgr->AddCallback(StateType::LoadGame, "LoadGame_Press_Selected", &State_LoadGame::PressSelected, this);
     evMgr->AddCallback(StateType::LoadGame,"LoadGame_Enter_Flip",&State_LoadGame::flip,this);
     evMgr->AddCallback(StateType::LoadGame,"LoadGame_Backspace",&State_LoadGame::Backspace,this);
-    password.second = SDL_Text(&user_font," ",SDL_Color{0,0,0,255});
-    password.first = "enter here";
+    password = "";
 }
 
 void State_LoadGame::OnDestroy() {
@@ -48,7 +48,7 @@ void State_LoadGame::OnDestroy() {
 
 void State_LoadGame::Update(float dt) {
     time_passed+=dt;
-    password.second.text = password.first;
+
 }
 
 void State_LoadGame::ReturnToMenu(EventDetails *l_details) {
@@ -62,20 +62,20 @@ void State_LoadGame::Draw() {
     int w = 1250; int h = 150;
     SDL_Rect rect = {center.x - w/2,center.y - h/2 - 150,w,h};
 
-    window->draw(menu_text,center.x,center.y-350);
+    window->draw(menu_text,menu_font,center.x,center.y-350,{255,255,255,255},true);
     window->draw(rect,SDL_Color{255,255,255,255},true);
     window->draw_guidlines({255,64,255,255});
-    if(password.first.length()-1 < max_pass_len) {
+    if(password.length() < max_pass_len) {
         SDL_Rect size;
-        window->draw(user_input,center.x,rect.y+350,user_font_size*9,&size);
+        window->draw(keyboard_text,user_font, center.x, rect.y + 350, user_font_size * 9,{255,255,255,255},true, &size);
         int pw = size.w/9; int ph = size.h/4;
         SDL_Rect selected_char = {size.x+pw*selectedX,size.y+selectedY*ph,pw,ph};
         window->draw(selected_char,{255,255,64,255});
     } else {
-        window->draw(SDL_Text(&info_font,"press [space] to continue",{255,64,64,255}),center.x,center.y+100);
+        window->draw("press [space] to continue",info_font,center.x,center.y+100,{255,64,64,255},true);
     }
-    window->draw_text_uncentered(password.second,rect.x+10,rect.y+32);
-    window->draw(info_text,center.x,2*center.y-100);
+    window->draw(password.empty() ? "enter here" : password,user_font,rect.x+10,rect.y+32,{0,0,0,255},false);
+    window->draw(info_text,info_font,center.x,2*center.y-100,700,{192,192,192,255},true);
 }
 
 void State_LoadGame::SelectUp(EventDetails *l_details) {
@@ -100,9 +100,8 @@ void State_LoadGame::SelectRight(EventDetails *l_details) {
 
 void State_LoadGame::PressSelected(EventDetails *l_details) {
     if(!enter_guard) return;
-    if(password.first.length() > max_pass_len) return;
-    if(password.first == "enter here") password.first = "";
-    password.first += letters[selectedX + selectedY*9];
+    if(password.length() > max_pass_len) return;
+    password += letters[selectedX + selectedY*9];
 }
 
 void State_LoadGame::flip(EventDetails *l_details) {
@@ -110,7 +109,5 @@ void State_LoadGame::flip(EventDetails *l_details) {
 }
 
 void State_LoadGame::Backspace(EventDetails *l_details) {
-    if(password.first == "enter here") return;
-    if(password.first.length() == 1) password.first = "enter here";
-    else password.first.pop_back();
+    if(password.length() != 0) password.pop_back();
 }

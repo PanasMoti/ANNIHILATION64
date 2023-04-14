@@ -6,7 +6,6 @@
 #define ANNIHILATION64_STATE_MAPEDIT_H
 #include "StateManager.h"
 #include "Map.h"
-#include "SDL_Text.h"
 
 class State_MapEdit : public BaseState{
 public:
@@ -28,13 +27,13 @@ public:
 private:
     Map* map;
     TTF_Font* menu_font;
-    SDL_Text menu_text;
+    std::string menu_text;
     TTF_Font* info_font;
-    SDL_Text info_text;
+    std::string info_text;
     int2 pointer;
     bool enter_guard;
     SDL_Color pointer_color;
-    SDL_Text info2_text;
+    std::string index_text;
 };
 
 

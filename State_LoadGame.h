@@ -5,7 +5,6 @@
 #ifndef ANNIHILATION64_STATE_LOADGAME_H
 #define ANNIHILATION64_STATE_LOADGAME_H
 #include "StateManager.h"
-#include "SDL_Text.h"
 #include "linalg.h"
 
 
@@ -34,11 +33,11 @@ private:
     TTF_Font* menu_font;
     TTF_Font* user_font;
     TTF_Font* info_font;
-    SDL_Text menu_text;
-    SDL_Text user_input;
-    SDL_Text info_text;
+    std::string menu_text;
+    std::string keyboard_text;
+    std::string info_text;
     int user_font_size;
-    std::pair<std::string,SDL_Text> password;
+    std::string password;
     int selectedX,selectedY;
     std::string letters;
     const int max_pass_len = 17;

@@ -17,8 +17,8 @@ void State_MapEdit::OnCreate() {
     this->map = new Map(16,16);
     menu_font = m_stateMgr->GetContext()->window->loadFont("assets/Doom2016.ttf",160);
     info_font = m_stateMgr->GetContext()->window->loadFont("assets/YosterIsland.ttf",32);
-    menu_text = SDL_Text(&menu_font,"edit your own level",SDL_Color{255,255,255,255});
-    info_text = SDL_Text(&info_font,"press [Z] to return to the menu",SDL_Color{192,192,192,255});
+    menu_text = "edit your own level";
+    info_text = ">press [Z] tp return to menu\n>use the [ARROWS] to move\n>press [ENTER] to change the selected";
     EventManager* evMgr = m_stateMgr->GetContext()->eventMgr;
     evMgr->AddCallback(StateType::MapEdit,"Return_To_Menu",&State_MapEdit::ReturnToMenu,this);
     TTF_SetFontStyle(menu_font,TTF_STYLE_ITALIC);
@@ -59,7 +59,7 @@ void State_MapEdit::Draw() {
     int r = map->GetHeight();
     int resx = size.x/c;
     int resy = size.y/r;
-    window->draw(menu_text,center.x,center.y - 350);
+    window->draw(menu_text,menu_font,center.x,center.y - 350,{255,255,255,255},true);
     int padx = -1; int pady = -1;
     for(int i = 0; i < c;i ++) {
         for(int j = 0; j < r; j++) {
@@ -79,10 +79,9 @@ void State_MapEdit::Draw() {
     for(int i = 0; i < 7; i++) {
         auto cell = static_cast<CellType>(i);
         std::string str = "> "+ToString(cell);
-        info2_text = SDL_Text(&info_font,str.c_str(), ToColor(cell));
-        window->draw_text_uncentered(info2_text,0,32*(i+1));
+        window->draw(str,info_font,{0,32*(i+1)}, ToColor(cell));
     }
-    window->draw(info_text,center.x,2*center.y-100);
+    window->draw(info_text,info_font,center.x,2*center.y-100,700,{192,192,192,255},true);
     window->draw_guidlines({255,64,255,255});
 }
 

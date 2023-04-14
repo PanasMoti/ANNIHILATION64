@@ -1,7 +1,6 @@
 #pragma once
 
 #include "RenderWindow.h"
-#include "SDL_Text.h"
 #include "config.h"
 #include "EventManager.h"
 #include "StateManager.h"

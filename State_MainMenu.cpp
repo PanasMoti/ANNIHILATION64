@@ -44,7 +44,7 @@ void State_MainMenu::Draw() {
     int2 p = window->ScreenCenter();
     window->draw(*menu_logo,p.x - menu_logo->GetWidth()/2,-10);
     for(int i = 0; i < 3; i++) {
-        window->draw(options[i],
+        window->draw((i==selected)? "\\" + options[i] + "/" : options[i],
                      menu_font,
                      p.x,p.y-150*(3-i) + 300,
                      (i==selected)?
