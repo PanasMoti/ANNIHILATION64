@@ -21,6 +21,7 @@ public:
 
     void draw(const Texture& texture,int x,int y);
     void draw(const Texture& texture,int2 pos);
+    void draw(const Texture& texture,SDL_Rect dst);
     void draw(const Texture& texture);
     void draw(const std::string& txt,TTF_Font* font,int x,int y, SDL_Color color={255,255,255,255},bool isCentered = false);
     void draw(const std::string& txt,TTF_Font* font,int2 pos,SDL_Color color={255,255,255,255},bool isCentered = false);
@@ -29,19 +30,21 @@ public:
     void draw(const char* str,TTF_Font* font,int x,int y,SDL_Color color);
     void draw(SDL_Rect sdlRect,SDL_Color color,bool filled = false);
     void draw_guidlines(const SDL_Color& sdlColor);
-    void update_buffer();
-    void render_gameplay();
 	void display();
 	int2 GetMousePosition() const;
     int2 ScreenCenter() const;
     int2 GetScreenSize() const;
     void destroy();
-
-	
+    void update();
+    void clear_buffer() const;
+    void create_buffer();
+    void render(int x,int y,SDL_Color color);
+    void render(int2 point,SDL_Color color);
+    void render_vertical_line(int x, int y0,int y1,SDL_Color color);
 private:
 	SDL_Window* window;
 	SDL_Renderer* renderer;
-    SDL_Texture* buffer;
+    std::pair<SDL_Surface*,SDL_Texture*> buffer;
 
 };
 

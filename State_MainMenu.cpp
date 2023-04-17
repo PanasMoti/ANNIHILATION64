@@ -4,6 +4,9 @@
 
 #include "State_MainMenu.h"
 #include <iostream>
+#include <sqlite3.h>
+#include "DataBase_Response.h"
+#include "GameData.h"
 
 void State_MainMenu::OnCreate() {
     time_passed = 0.0f;
@@ -13,7 +16,7 @@ void State_MainMenu::OnCreate() {
     menu_font = m_stateMgr->GetContext()->window->loadFont("assets/Doom2016.ttf",160);
     info_font = m_stateMgr->GetContext()->window->loadFont("assets/YosterIsland.ttf", 32);
     options[0] = "new game"; options[1] = "load game"; options[2] = "custom game";
-    info = ">press [ESC] to quit\n>press [ENTER] to confirm\n>use [UP] and [DOWN] arrows to move";
+    info = ">press [ESC] to quit\n>press [ENTER] to confirm\n>use the [UP] and [DOWN] arrows to move your select";
     menu_logo = new Texture(m_stateMgr->GetContext()->window->loadTexture("assets/logo.png"));
     EventManager* evMgr = m_stateMgr->GetContext()->eventMgr;
     evMgr->AddCallback(StateType::MainMenu,"MainMenu_Continue",&State_MainMenu::Continue,this);
@@ -45,6 +48,7 @@ void State_MainMenu::Draw() {
     RenderWindow* window = m_stateMgr->GetContext()->window;
     int2 p = window->ScreenCenter();
     window->draw(*menu_logo,p.x - menu_logo->GetWidth()/2,-10);
+
     for(int i = 0; i < 3; i++) {
         window->draw((i==selected)? "\\" + options[i] + "/" : options[i],
                      menu_font,
@@ -58,10 +62,23 @@ void State_MainMenu::Draw() {
 }
 
 void State_MainMenu::Continue(EventDetails *l_details) {
-    m_stateMgr->SwitchTo(StateType::GamePlay);
+    //m_stateMgr->SwitchTo(StateType::GamePlay);
+
     switch (selected) {
-        case 0:
+        case 0: {
+            DataBase_Response &response = DataBase_Response::self();
+            sqlite3 *DB;
+            sqlite3_open("data/storage.db", &DB);
+            const char *query = "SELECT * FROM GAME WHERE PASSWORD = 'NEWGAME';";
+            const char *data;
+            char *errmsg;
+            sqlite3_exec(DB, query, callback, (void *) data, &errmsg);
+            sqlite3_close(DB);
+            GameData &gameData = GameData::self();
+            gameData.level = response.str;
+            gameData.is_new_game = true;
             m_stateMgr->SwitchTo(StateType::GamePlay);
+        }
             break;
         case 1:
             m_stateMgr->SwitchTo(StateType::LoadGame);

@@ -29,6 +29,7 @@ public:
     friend std::ostream& operator<<(std::ostream& os,const Texture& texture);
     void Scale(float p);
     void Scale(float x,float y);
+    SDL_Surface* ToSurface() const;
 private:
     SDL_Texture* pixels{};
     int2 size;

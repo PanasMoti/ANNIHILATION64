@@ -8,6 +8,7 @@
 #include <SDL2/SDL.h>
 #include "GameData.h"
 #include <unordered_map>
+#include "Texture.h"
 
 
 
@@ -28,6 +29,7 @@ public:
 
 private:
     keyboard keys_state;
+    Texture* test;
 };
 
 

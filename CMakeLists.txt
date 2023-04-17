@@ -34,7 +34,7 @@ add_executable(${PROJECT_NAME} main.cpp
         State_MapEdit.cpp State_MapEdit.h
         Map.cpp Map.h
         State_GamePlay.cpp State_GamePlay.h
-        GameData.h)
+        GameData.h DataBase_Response.h GameTexture.cpp GameTexture.h)
 
 # Link libraries
 target_link_libraries(${PROJECT_NAME} SDL2::SDL2 SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf SQLite::SQLite3)

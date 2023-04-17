@@ -22,6 +22,7 @@ State_GamePlay::State_GamePlay(StateManager *l_stateManager) : BaseState(l_state
 }
 
 void State_GamePlay::OnCreate() {
+//    m_stateMgr->GetContext()->window->create_buffer();
     keys_state[119] = false;
     keys_state[97] = false;
     keys_state[100] = false;
@@ -47,6 +48,7 @@ void State_GamePlay::OnDestroy() {
 void State_GamePlay::Activate() {
     //TODO: process the level into the map;
     std::cout << GameData::self().level << std::endl;
+    m_stateMgr->GetContext()->window->create_buffer();
     GameData& gameData = GameData::self();
     Map map;
     std::string level = gameData.level;
@@ -80,7 +82,20 @@ void State_GamePlay::Update(float dt) {
 }
 
 void State_GamePlay::Draw() {
-
+    GameData& data = GameData::self();
+    RenderWindow* window = m_stateMgr->GetContext()->window;
+    window->clear_buffer();
+//    for(int i = 0; i < data.res.x; i++) {
+//        for(int j = 0; j < data.res.y;j++) {
+//            auto color = ((i + j) % 2 == 0) ? SDL_Color{255, 0, 0, 255} : SDL_Color{0, 255, 0, 255};
+//            window->render(i,j,color);
+//        }
+//    }
+    for(int i = 0; i < data.res.x; i++) {
+        auto color = (i%2 == 0)? SDL_Color {255,255,0,255} : SDL_Color {0,255,255,255};
+        window->render_vertical_line(i,0,data.res.y,color);
+    }
+    window->update();
 }
 
 void State_GamePlay::KeyPressed(EventDetails *l_details) {

@@ -7,7 +7,6 @@
 #include "linalg.h"
 #include "Map.h"
 
-
 using namespace linalg::aliases;
 
 struct Player {
@@ -25,19 +24,20 @@ struct GameData {
     Map map;
     int2 res;
     Player player;
-    std::vector<u32> pixels;
     std::string level;
+    bool is_new_game;
     void init() {
         res = {384,216};
         player.pos = static_cast<const linalg::vec<float, 2>>(map.GetPlayerSpawn());
         player.dir = {-1,0};
         player.plane = {0,0.66};
-        pixels.resize(res.x*res.y);
+        is_new_game = false;
     }
     void SetMap(const Map& map1) {
         map = map1;
         init();
     }
+
 
 private:
     GameData() = default;

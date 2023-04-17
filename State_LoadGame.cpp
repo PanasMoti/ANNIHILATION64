@@ -5,6 +5,7 @@
 #include "State_LoadGame.h"
 #include <iostream>
 #include "GameData.h"
+#include "DataBase_Response.h"
 
 State_LoadGame::State_LoadGame(StateManager *l_stateManager) : BaseState(l_stateManager) {
     OnCreate();
@@ -13,7 +14,7 @@ State_LoadGame::State_LoadGame(StateManager *l_stateManager) : BaseState(l_state
 void State_LoadGame::OnCreate() {
     this->enter_guard = false; IsFoundInDB = false; showErrorMsg = false;
     letters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    time_passed = 0.0f; selectedX = 0; selectedY = 0; user_font_size = 64;
+    time_passed = 0.0f; selectedX = 0; selectedY = 0; user_font_size = 48;
     menu_font = m_stateMgr->GetContext()->window->loadFont("assets/Doom2016.ttf",160);
     info_font = m_stateMgr->GetContext()->window->loadFont("assets/YosterIsland.ttf",32);
     user_font = m_stateMgr->GetContext()->window->loadFont("assets/Emulogic.ttf",user_font_size);
@@ -56,6 +57,7 @@ void State_LoadGame::Update(float dt) {
     if(IsFoundInDB) {
         GameData& gameData = GameData::self();
         gameData.level = DataBase_Response::self().str;
+
         m_stateMgr->SwitchTo(StateType::GamePlay);
     }
 }
@@ -137,7 +139,7 @@ void State_LoadGame::SubmitInput(EventDetails *l_details) {
     std::string query = "SELECT * FROM GAME WHERE PASSWORD='" + password + "';";
     const std::string* data;
     char *errmsg;
-    sqlite3_exec(DB,query.c_str(),State_LoadGame::callback,(void*)&data,&errmsg);
+    sqlite3_exec(DB,query.c_str(),callback,(void*)&data,&errmsg);
     if(DataBase_Response::self().str.empty()) {
         IsFoundInDB = false;
     } else {
@@ -146,12 +148,3 @@ void State_LoadGame::SubmitInput(EventDetails *l_details) {
 //    std::cout << DataBase_Response::self().str << std::endl;
 }
 
-int State_LoadGame::callback(void *data, int argc, char **argv, char **azColName) {
-    int i;
-    DataBase_Response& tmp = DataBase_Response::self();
-    for(i = 0; i<argc; i++){
-        tmp.str += std::string(azColName[i]) + " = " + (argv[i] ? argv[i] : "NULL") + "\n";
-    }
-
-    return 0;
-}

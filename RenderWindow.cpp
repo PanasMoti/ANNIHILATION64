@@ -13,14 +13,9 @@ RenderWindow::RenderWindow(const char* title, int width, int height)
     SDL_SetWindowIcon(window,icon);
     SDL_FreeSurface(icon);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
-    GameData& gameData = GameData::self();
-    buffer = SDL_CreateTexture(
-            renderer,
-            SDL_PIXELFORMAT_ABGR8888,
-            SDL_TEXTUREACCESS_STREAMING,
-            gameData.res.x,
-            gameData.res.y);
+//    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2");
+    buffer.first = nullptr;
+    buffer.second = nullptr;
 }
 
 SDL_Texture* RenderWindow::loadSDL_Texture(const char* fileName)
@@ -223,17 +218,49 @@ void RenderWindow::draw(const std::string &txt, TTF_Font *font, int x, int y, Ui
     SDL_DestroyTexture(texture);
 }
 
-void RenderWindow::render_gameplay() {
-    GameData& gameData = GameData::self();
-    SDL_RenderCopy(renderer,buffer, nullptr, nullptr);
+
+void RenderWindow::draw(const Texture &texture, SDL_Rect dst) {
+    SDL_RenderCopy(renderer,texture.SDL_Tex(), nullptr,&dst);
 }
 
-void RenderWindow::update_buffer() {
+void RenderWindow::create_buffer() {
     GameData& gameData = GameData::self();
-    void* pixels; int pitch;
-    SDL_LockTexture(buffer, nullptr,&pixels,&pitch);
-    uint32_t* a = &gameData.pixels[0];
-    memcpy(pixels,a,(pitch/4)*gameData.res.y);
-    SDL_UnlockTexture(buffer);
+    buffer.first = SDL_CreateRGBSurface(0,gameData.res.x,gameData.res.y,32,0,0,0,0);
+    SDL_SetSurfaceRLE(buffer.first, true);
+    clear_buffer();
+    buffer.second = SDL_CreateTexture(renderer,buffer.first->format->format,SDL_TEXTUREACCESS_TARGET,gameData.res.x,gameData.res.y);
 }
+
+void RenderWindow::clear_buffer() const {
+    SDL_LockSurface(buffer.first);
+    SDL_memset(buffer.first->pixels,0,buffer.first->h*buffer.first->pitch);
+    SDL_UnlockSurface(buffer.first);
+}
+
+void RenderWindow::update() {
+    SDL_UpdateTexture(buffer.second, nullptr,buffer.first->pixels,buffer.first->pitch);
+    SDL_RenderCopy(renderer,buffer.second, nullptr, nullptr);
+}
+
+void RenderWindow::render(int x, int y, SDL_Color color) {
+    uint32_t c = SDL_MapRGBA(buffer.first->format,color.r,color.g,color.b,color.a);
+    auto * const target_pixel = (Uint32 *) ((Uint8 *) buffer.first->pixels
+                                            + y * buffer.first->pitch
+                                            + x * buffer.first->format->BytesPerPixel);
+    *target_pixel = c;
+}
+
+
+
+void RenderWindow::render(int2 point, SDL_Color color) {
+    render(point.x,point.y,color);
+}
+
+void RenderWindow::render_vertical_line(int x, int y0, int y1, SDL_Color color) {
+    SDL_Rect rect = {x,y0,1,y1-y0};
+    uint32_t c = SDL_MapRGBA(buffer.first->format,color.r,color.g,color.b,color.a);
+    SDL_FillRect(buffer.first,&rect,c);
+}
+
+
 

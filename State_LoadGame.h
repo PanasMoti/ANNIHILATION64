@@ -9,25 +9,6 @@
 #include <sqlite3.h>
 
 
-class DataBase_Response {
-public:
-    static DataBase_Response& self() {
-        static DataBase_Response baseResponse;
-        return baseResponse;
-    }
-
-    std::string str;
-    DataBase_Response(const DataBase_Response&) = delete;
-    DataBase_Response(DataBase_Response&&) = delete;
-    DataBase_Response& operator=(DataBase_Response&&) = delete;
-    DataBase_Response& operator=(const DataBase_Response&) = delete;
-
-private:
-    static DataBase_Response* instance;
-    DataBase_Response() = default;
-};
-
-
 
 class State_LoadGame : public BaseState{
 public:
@@ -64,7 +45,6 @@ private:
     const int max_pass_len = 17;
     bool enter_guard;
     sqlite3* DB;
-    static int callback(void* data,int argc,char **argv,char **azColName);
     bool IsFoundInDB;
     bool showErrorMsg;
 };

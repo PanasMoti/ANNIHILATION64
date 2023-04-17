@@ -88,4 +88,20 @@ void Texture::Scale(float x, float y) {
     this->size.y*=y;
 }
 
+SDL_Surface *Texture::ToSurface() const {
+    int pitch, w, h;
+    void *pVoid;
+    SDL_QueryTexture(this->pixels, nullptr,nullptr,&w,&h);
+    SDL_LockTexture(this->pixels, nullptr,&pVoid,&pitch);
+    SDL_Surface* surface = SDL_CreateRGBSurfaceFrom(
+            pVoid,
+            w,h,
+            32,
+            pitch,
+            0,0,0,0
+            );
+    SDL_UnlockTexture(this->pixels);
+    return surface;
+}
+
 
