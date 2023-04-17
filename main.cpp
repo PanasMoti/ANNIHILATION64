@@ -3,9 +3,12 @@
 #include <iostream>
 
 #include "Game.h"
+#include "GameData.h"
 
 
 int main(int argc, char** argv) {
+    GameData& gameData = GameData::self();
+    gameData.init();
     srand(time(nullptr));
 	Game* game = new Game();
 	while (!game->shouldClose) {

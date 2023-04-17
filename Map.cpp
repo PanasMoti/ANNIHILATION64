@@ -3,7 +3,7 @@
 //
 
 #include "Map.h"
-
+#include <iostream>
 Map::Map(int2 _size) {
     this->size = _size;
     grid = InitalizeGrid(_size.y,_size.x);
@@ -69,4 +69,32 @@ std::ostream &operator<<(std::ostream &os, const Map &map) {
         os << "\n";
     }
     return os;
+}
+
+bool Map::IsValidMap() const {
+    int counter[7] = {0}; // initalize the counting array to zero to avoid memory leak errors
+    for(auto row : grid) {
+        for(auto cell : row) {
+            int index = static_cast<int>(cell);
+            counter[index]++;
+        }
+    }
+    // the rules :
+    // 1.) only 1 player spawn
+    // 2.) only 1 level end
+    int count_level_end =counter[static_cast<int>(CellType::LevelEnd)];
+    int count_player_spawn = counter[static_cast<int>(CellType::PlayerSpawn)];
+    return (count_player_spawn == 1 && count_level_end == 1);
+
+}
+
+int2 Map::GetPlayerSpawn() const {
+    for(int x = 0; x < GetWidth(); x++) {
+        for(int y = 0; y < GetHeight(); y++) {
+            if((*this)(x,y) == CellType::PlayerSpawn) {
+                return {x,y};
+            }
+        }
+    }
+    return {1,1};
 }

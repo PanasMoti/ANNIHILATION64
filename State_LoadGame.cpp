@@ -4,6 +4,7 @@
 
 #include "State_LoadGame.h"
 #include <iostream>
+#include "GameData.h"
 
 State_LoadGame::State_LoadGame(StateManager *l_stateManager) : BaseState(l_stateManager) {
     OnCreate();
@@ -31,6 +32,7 @@ void State_LoadGame::OnCreate() {
     evMgr->AddCallback(StateType::LoadGame,"LoadGame_Backspace",&State_LoadGame::Backspace,this);
     evMgr->AddCallback(StateType::LoadGame,"LoadGame_Submit",&State_LoadGame::SubmitInput,this);
     password = "";
+
 }
 
 void State_LoadGame::OnDestroy() {
@@ -51,12 +53,9 @@ void State_LoadGame::OnDestroy() {
 
 void State_LoadGame::Update(float dt) {
     time_passed+=dt;
-    auto f = fmod(time_passed,2.0f);
-    if(f >= 1.5f) {
-        showErrorMsg = false;
-        time_passed = 0.0f;
-    }
     if(IsFoundInDB) {
+        GameData& gameData = GameData::self();
+        gameData.level = DataBase_Response::self().str;
         m_stateMgr->SwitchTo(StateType::GamePlay);
     }
 }
@@ -113,6 +112,7 @@ void State_LoadGame::SelectRight(EventDetails *l_details) {
 
 void State_LoadGame::PressSelected(EventDetails *l_details) {
     if(!enter_guard) return;
+    showErrorMsg = false;
     if(password.length() > max_pass_len) return;
     password += letters[selectedX + selectedY*9];
 }
@@ -143,13 +143,12 @@ void State_LoadGame::SubmitInput(EventDetails *l_details) {
     } else {
         IsFoundInDB = true;
     }
-    std::cout << DataBase_Response::self().str << std::endl;
+//    std::cout << DataBase_Response::self().str << std::endl;
 }
 
 int State_LoadGame::callback(void *data, int argc, char **argv, char **azColName) {
     int i;
     DataBase_Response& tmp = DataBase_Response::self();
-//    fprintf(stderr, "%s: ", (const char*)data);
     for(i = 0; i<argc; i++){
         tmp.str += std::string(azColName[i]) + " = " + (argv[i] ? argv[i] : "NULL") + "\n";
     }

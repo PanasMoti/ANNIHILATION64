@@ -1,5 +1,8 @@
 #include "RenderWindow.h"
 #include <iostream>
+#include "GameData.h"
+
+
 RenderWindow::RenderWindow(const char* title, int width, int height)
 {
 	this->window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height,
@@ -11,6 +14,13 @@ RenderWindow::RenderWindow(const char* title, int width, int height)
     SDL_FreeSurface(icon);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
+    GameData& gameData = GameData::self();
+    buffer = SDL_CreateTexture(
+            renderer,
+            SDL_PIXELFORMAT_ABGR8888,
+            SDL_TEXTUREACCESS_STREAMING,
+            gameData.res.x,
+            gameData.res.y);
 }
 
 SDL_Texture* RenderWindow::loadSDL_Texture(const char* fileName)
@@ -211,5 +221,19 @@ void RenderWindow::draw(const std::string &txt, TTF_Font *font, int x, int y, Ui
     SDL_FreeSurface(surface);
     SDL_RenderCopy(renderer, texture, nullptr, &r);
     SDL_DestroyTexture(texture);
+}
+
+void RenderWindow::render_gameplay() {
+    GameData& gameData = GameData::self();
+    SDL_RenderCopy(renderer,buffer, nullptr, nullptr);
+}
+
+void RenderWindow::update_buffer() {
+    GameData& gameData = GameData::self();
+    void* pixels; int pitch;
+    SDL_LockTexture(buffer, nullptr,&pixels,&pitch);
+    uint32_t* a = &gameData.pixels[0];
+    memcpy(pixels,a,(pitch/4)*gameData.res.y);
+    SDL_UnlockTexture(buffer);
 }
 

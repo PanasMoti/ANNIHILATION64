@@ -13,6 +13,7 @@ State_MapEdit::State_MapEdit(StateManager *l_stateManager) : BaseState(l_stateMa
 }
 
 void State_MapEdit::OnCreate() {
+    map_is_valid = true;
     enter_guard = false; written_to_db = false;
     time_passed = 0.0f;
     pointer = {0,0};
@@ -21,7 +22,8 @@ void State_MapEdit::OnCreate() {
     menu_font = m_stateMgr->GetContext()->window->loadFont("assets/Doom2016.ttf",160);
     info_font = m_stateMgr->GetContext()->window->loadFont("assets/YosterIsland.ttf",32);
     menu_text = "edit your own level";
-    info_text = ">press [Z] tp return to menu\n>use the [ARROWS] to move\n>press [ENTER] to change the selected";
+
+    info_text = ">press [Z] to return to menu\n>press [ENTER] to change the selected\n>press [SPACE] to continue\n>[1,2,3,4] to change the map size";
     EventManager* evMgr = m_stateMgr->GetContext()->eventMgr;
     evMgr->AddCallback(StateType::MapEdit,"Return_To_Menu",&State_MapEdit::ReturnToMenu,this);
     TTF_SetFontStyle(menu_font,TTF_STYLE_ITALIC);
@@ -32,7 +34,14 @@ void State_MapEdit::OnCreate() {
     evMgr->AddCallback(StateType::MapEdit,"MapEdit_Enter_Flip",&State_MapEdit::flip,this);
     evMgr->AddCallback(StateType::MapEdit,"MapEdit_Press_Selected",&State_MapEdit::PressSelected,this);
     evMgr->AddCallback(StateType::MapEdit,"MapEdit_Save",&State_MapEdit::SaveMap,this);
+    evMgr->AddCallback(StateType::MapEdit,"MapEdit_Increase_Width",&State_MapEdit::ChaneMapSize,this);
+    evMgr->AddCallback(StateType::MapEdit,"MapEdit_Increase_Height",&State_MapEdit::ChaneMapSize,this);
+    evMgr->AddCallback(StateType::MapEdit,"MapEdit_Decrease_Width",&State_MapEdit::ChaneMapSize,this);
+    evMgr->AddCallback(StateType::MapEdit,"MapEdit_Decrease_Height",&State_MapEdit::ChaneMapSize,this);
+
 }
+
+
 
 void State_MapEdit::OnDestroy() {
     TTF_CloseFont(menu_font);
@@ -46,6 +55,11 @@ void State_MapEdit::OnDestroy() {
     evMgr->RemoveCallback(StateType::MapEdit,"MapEdit_Press_Selected");
     evMgr->RemoveCallback(StateType::MapEdit,"MapEdit_Enter_Flip");
     evMgr->RemoveCallback(StateType::MapEdit,"MapEdit_Save");
+    evMgr->RemoveCallback(StateType::MapEdit,"MapEdit_Increase_Width");
+    evMgr->RemoveCallback(StateType::MapEdit,"MapEdit_Increase_Height");
+    evMgr->RemoveCallback(StateType::MapEdit,"MapEdit_Decrease_Width");
+    evMgr->RemoveCallback(StateType::MapEdit,"MapEdit_Decrease_Height");
+
     sqlite3_close(DB);
 }
 
@@ -90,8 +104,13 @@ void State_MapEdit::Draw() {
             std::string str = "> "+ToString(cell);
             window->draw(str,info_font,{0,32*(i+1)}, ToColor(cell));
         }
+        window->draw("width:" + std::to_string(map.GetWidth()) + " height: " + std::to_string(map.GetHeight()),info_font,0,0);
     }
+    TTF_SetFontWrappedAlign(info_font,TTF_WRAPPED_ALIGN_CENTER);
     window->draw(info_text,info_font,center.x,2*center.y-100,700,{192,192,192,255},true);
+    if(!map_is_valid) MapIsntValid();
+    if(is_not_allowed) NotAllowed();
+    TTF_SetFontWrappedAlign(info_font,TTF_WRAPPED_ALIGN_LEFT);
 
     //    window->draw_guidlines({255,64,255,255});
 }
@@ -103,25 +122,44 @@ void State_MapEdit::ReturnToMenu(EventDetails *l_details) {
 void State_MapEdit::SelectUp(EventDetails *l_details) {
     pointer.y-=1;
     if(pointer.y < 0) pointer.y = map.GetHeight()-1;
+    is_not_allowed = false;
+    map_is_valid = true;
+
 }
 
 void State_MapEdit::SelectDown(EventDetails *l_details) {
     pointer.y+=1;
     if(pointer.y > map.GetHeight()-1) pointer.y = 0;
+    is_not_allowed = false;
+    map_is_valid = true;
+
 }
 
 void State_MapEdit::SelectLeft(EventDetails *l_details) {
     pointer.x-=1;
     if(pointer.x < 0) pointer.x = map.GetWidth()-1;
+    is_not_allowed = false;
+    map_is_valid = true;
+
 }
 
 void State_MapEdit::SelectRight(EventDetails *l_details) {
     pointer.x+=1;
     if(pointer.x > map.GetWidth()-1) pointer.x = 0;
+    is_not_allowed = false;
+    map_is_valid = true;
+
 }
 
 void State_MapEdit::PressSelected(EventDetails *l_details) {
     if(!enter_guard) return;
+    is_not_allowed = false;
+
+    map_is_valid = true;
+    if(pointer.x == 0 || pointer.y == 0 || pointer.x == map.GetWidth()-1 || pointer.y == map.GetHeight()-1) {
+        is_not_allowed = true;
+        return;
+    }
     auto tmp = static_cast<int>(map(pointer.x,pointer.y));
     tmp++; if(tmp >= 7) tmp = 0;
     map(pointer.x,pointer.y) = static_cast<CellType>(tmp);}
@@ -130,22 +168,14 @@ void State_MapEdit::flip(EventDetails *l_details) {
     enter_guard = true;
 }
 
-static int callback(void* data, int argc, char** argv, char** azColName)
-{
-    int i;
-    fprintf(stderr, "%s: ", (const char*)data);
-
-    for (i = 0; i < argc; i++) {
-        printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
-    }
-
-    printf("\n");
-    return 0;
-}
-
 
 void State_MapEdit::SaveMap(EventDetails *l_details) {
     if(written_to_db) return;
+    is_not_allowed = false;
+    if(!map.IsValidMap()) {
+        map_is_valid = false;
+        return;
+    }
     written_to_db = true;
     std::string str;
     for(int i = 0; i < map.GetWidth(); i++) {
@@ -173,8 +203,47 @@ void State_MapEdit::Activate() {
     written_to_db = false;
     custom_pass = random_string(rand()%17 + 1);
     enter_guard = false;
+    map_is_valid = true;
+    is_not_allowed = false;
 }
 
 void State_MapEdit::Deactivate() {
     sqlite3_close(DB);
+
+}
+
+void State_MapEdit::MapIsntValid() {
+    RenderWindow* window = m_stateMgr->GetContext()->window;
+    window->draw("~every map~ needs to have exactly --ONE--\n>LevelEnd\n>PlayerSpawn",info_font,0,300,300,{255,20,20,128});
+}
+
+void State_MapEdit::NotAllowed() {
+    RenderWindow* window = m_stateMgr->GetContext()->window;
+    window->draw("~you're not allowed to modify the borders!~",info_font,0,300,300,{255,20,20,128});
+}
+
+void State_MapEdit::ChaneMapSize(EventDetails *l_details) {
+    int key = l_details->keyCode - 48;
+    int w = map.GetWidth(), h = map.GetHeight();
+    switch (key) {
+        case 1:
+            // increase width
+            if(w<32) map.SetWidth(w+1);
+            break;
+        case 2:
+            // increase height
+            if(h<32) map.SetHeight(h+1);
+            break;
+        case 3:
+            // decrease width
+            if(w>16) map.SetWidth(w-1);
+            break;
+        case 4:
+            // decrease height:
+            if(h>16) map.SetHeight(h-1);
+            break;
+        default:
+            std::cerr << "something went terribly wrong" << std::endl;
+            break;
+    }
 }

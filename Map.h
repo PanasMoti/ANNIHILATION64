@@ -90,6 +90,8 @@ public:
     CellType& operator()(size_t x,size_t y);
     const CellType& operator()(size_t x,size_t y) const;
     friend std::ostream& operator<<(std::ostream& os, const Map& map);
+    bool IsValidMap() const;
+    int2 GetPlayerSpawn() const;
 private:
     void UpdateSize();
     int2 size;

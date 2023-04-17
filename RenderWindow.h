@@ -29,6 +29,8 @@ public:
     void draw(const char* str,TTF_Font* font,int x,int y,SDL_Color color);
     void draw(SDL_Rect sdlRect,SDL_Color color,bool filled = false);
     void draw_guidlines(const SDL_Color& sdlColor);
+    void update_buffer();
+    void render_gameplay();
 	void display();
 	int2 GetMousePosition() const;
     int2 ScreenCenter() const;
@@ -39,6 +41,7 @@ public:
 private:
 	SDL_Window* window;
 	SDL_Renderer* renderer;
+    SDL_Texture* buffer;
 
 };
 

@@ -24,6 +24,9 @@ public:
     void SelectRight(EventDetails* l_details);
     void PressSelected(EventDetails* l_details);
     void SaveMap(EventDetails* l_details);
+    void ChaneMapSize(EventDetails* l_details);
+    void MapIsntValid();
+    void NotAllowed();
 
     void flip(EventDetails* l_details);
 private:
@@ -39,6 +42,8 @@ private:
     sqlite3* DB;
     std::string custom_pass;
     bool written_to_db;
+    bool map_is_valid;
+    bool is_not_allowed;
 };
 
 
