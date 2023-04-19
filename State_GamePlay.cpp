@@ -107,7 +107,7 @@ void State_GamePlay::Update(float dt) {
     if(keys_state[SDLK_s]) {
         data.player.pos-=data.player.dir*moveSpeed;
     }
-    if(keys_state[SDLK_a]) {
+    if(keys_state[SDLK_d]) {
         //both camera direction and camera plane must be rotated
         double oldDirX = dirX;
         dirX = dirX * cos(rotSpeed) - dirY * sin(rotSpeed);
@@ -118,7 +118,7 @@ void State_GamePlay::Update(float dt) {
         data.player.plane = {planeX,planeY};
         data.player.dir = {dirX,dirY};
     }
-    if(keys_state[SDLK_d]) {
+    if(keys_state[SDLK_a]) {
         //both camera direction and camera plane must be rotated
         double oldDirX = dirX;
         dirX = dirX * cos(-rotSpeed) - dirY * sin(-rotSpeed);
@@ -173,7 +173,7 @@ void State_GamePlay::Draw() {
 
         }
         //perform DDA
-        while(hit == 0) {
+        while(true) {
             //jump to next map square, either in x-direction, or in y-direction
             if (sideDist.x < sideDist.y)
             {
@@ -188,23 +188,23 @@ void State_GamePlay::Draw() {
                 side = 1;
             }
             //Check if ray has hit a wall
-            if (data.map(mapX,mapY) != CellType::Empty) hit = 1;
+            if (data.map(mapX,mapY) != CellType::Empty) break;
 
-            //Calculate distance projected on camera direction (Euclidean distance would give fisheye effect!)
-            if(side == 0) perpWallDist = (sideDist.x - deltaDist.x);
-            else          perpWallDist = (sideDist.y - deltaDist.y);
-
-            //Calculate height of line to draw on screen
-            int lineHeight = (int)(h / perpWallDist);
-
-            //calculate lowest and highest pixel to fill in current stripe
-            int drawStart = -lineHeight / 2 + h / 2;
-            if(drawStart < 0)drawStart = 0;
-            int drawEnd = lineHeight / 2 + h / 2;
-            if(drawEnd >= h)drawEnd = h - 1;
-            SDL_Color color = ToColor(data.map(mapX,mapY));
-            window->render_vertical_line(x,drawStart,drawEnd,color);
         }
+        //Calculate distance projected on camera direction (Euclidean distance would give fisheye effect!)
+        if(side == 0) perpWallDist = (sideDist.x - deltaDist.x);
+        else          perpWallDist = (sideDist.y - deltaDist.y);
+
+        //Calculate height of line to draw on screen
+        int lineHeight = (int)(h / perpWallDist);
+
+        //calculate lowest and highest pixel to fill in current stripe
+        int drawStart = -lineHeight / 2 + h / 2;
+        if(drawStart < 0)drawStart = 0;
+        int drawEnd = lineHeight / 2 + h / 2;
+        if(drawEnd >= h)drawEnd = h - 1;
+        SDL_Color color = ToColor(data.map(mapX,mapY));
+        window->render_vertical_line(x,drawStart,drawEnd,color);
 
     }
     window->update();
