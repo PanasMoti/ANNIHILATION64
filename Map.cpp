@@ -64,7 +64,7 @@ void Map::UpdateSize() {
 std::ostream &operator<<(std::ostream &os, const Map &map) {
     for(auto& i : map.grid) {
         for(auto& j : i) {
-            os << j;
+            os << j << " ";
         }
         os << "\n";
     }
@@ -97,4 +97,13 @@ int2 Map::GetPlayerSpawn() const {
         }
     }
     return {1,1};
+}
+
+void Map::SetMap(const std::string &str) {
+    for(int i = 0; i < GetWidth(); i++) {
+        for(int j = 0; j < GetHeight(); j++) {
+            auto cell = static_cast<CellType>(str[i+j*GetWidth()]-48);
+            grid[i][j] = cell;
+        }
+    }
 }

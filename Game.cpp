@@ -44,8 +44,8 @@ void Game::update() {
 		m_eventManager.HandleEvent(event);
 	}
 	m_eventManager.Update();
-	m_stateManager.Update(clock.delta * 0.001);
     clock.tick();
+    m_stateManager.Update(clock.delta*0.001);
 }
 
 void Game::lateUpdate() {

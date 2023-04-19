@@ -30,7 +30,7 @@ static int callback(void* data,int argc,char **argv,char **azColName) {
     int i;
     DataBase_Response& tmp = DataBase_Response::self();
     for(i = 0; i<argc; i++){
-        tmp.str += std::string(azColName[i]) + " = " + (argv[i] ? argv[i] : "NULL") + "\n";
+        tmp.str += std::string(azColName[i]) + " = " +  (argv[i] ? argv[i] : "NULL") + std::string("\n");
     }
 
     return 0;

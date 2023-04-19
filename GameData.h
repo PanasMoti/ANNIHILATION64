@@ -27,10 +27,10 @@ struct GameData {
     std::string level;
     bool is_new_game;
     void init() {
-        res = {384,216};
+        res = {640,640};
         player.pos = static_cast<const linalg::vec<float, 2>>(map.GetPlayerSpawn());
-        player.dir = {-1,0};
-        player.plane = {0,0.66};
+        player.dir = {1,0};
+        player.plane = {0,0.66  };
         is_new_game = false;
     }
     void SetMap(const Map& map1) {
