@@ -238,9 +238,8 @@ void RenderWindow::clear_buffer() const {
 }
 
 void RenderWindow::update() {
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer,buffer.first);
-    SDL_RenderCopy(renderer,texture, nullptr, nullptr);
-    SDL_DestroyTexture(texture);
+    SDL_UpdateTexture(buffer.second, nullptr,buffer.first->pixels,buffer.first->pitch);
+    SDL_RenderCopy(renderer,buffer.second, nullptr, nullptr);
 }
 
 void RenderWindow::render(int x, int y, SDL_Color color) {

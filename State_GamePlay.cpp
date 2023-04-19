@@ -142,8 +142,8 @@ void State_GamePlay::Draw() {
         float camX = 2*x/float(w) - 1; // x coordinate in camera space
         float2 raydir = data.player.dir + data.player.plane*camX;
         //which box of the map we're in
-        int mapX = data.map.GetPlayerSpawn().x;
-        int mapY = data.map.GetPlayerSpawn().y;
+        int mapX = static_cast<int>(data.player.pos.x);
+        int mapY = static_cast<int>(data.player.pos.y);
         //length of ray from current position to next x or y-side
         float2 sideDist;
         //length of ray from one x or y-side to next x or y-side
@@ -190,7 +190,7 @@ void State_GamePlay::Draw() {
             //Check if ray has hit a wall
             if (data.map(mapX,mapY) != CellType::Empty) break;
 
-        }
+        } // DDA
         //Calculate distance projected on camera direction (Euclidean distance would give fisheye effect!)
         if(side == 0) perpWallDist = (sideDist.x - deltaDist.x);
         else          perpWallDist = (sideDist.y - deltaDist.y);
