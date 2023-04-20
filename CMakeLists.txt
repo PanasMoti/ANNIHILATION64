@@ -20,6 +20,10 @@ find_package(SQLite3 REQUIRED)
 
 #include_directories(${SQLITE3_INCLUDE_DIRS})
 
+# Find json library
+find_package(nlohmann_json 3.2.0 REQUIRED)
+
+
 # Add executable
 add_executable(${PROJECT_NAME} main.cpp
         config.h
@@ -34,10 +38,14 @@ add_executable(${PROJECT_NAME} main.cpp
         State_MapEdit.cpp State_MapEdit.h
         Map.cpp Map.h
         State_GamePlay.cpp State_GamePlay.h
-        GameData.h DataBase_Response.h GameTexture.cpp GameTexture.h)
+        GameData.h DataBase_Response.h
+        Colors.h picopng.h
+        GameTexture.cpp GameTexture.h Sprite.cpp Sprite.h fileutil.h)
+
+
 
 # Link libraries
-target_link_libraries(${PROJECT_NAME} SDL2::SDL2 SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf SQLite::SQLite3)
+target_link_libraries(${PROJECT_NAME} SDL2::SDL2 SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf SQLite::SQLite3 nlohmann_json::nlohmann_json)
 add_custom_target(copy_assets
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/assets ${CMAKE_CURRENT_BINARY_DIR}/assets
         )

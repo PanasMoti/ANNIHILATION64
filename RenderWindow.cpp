@@ -260,7 +260,49 @@ void RenderWindow::render_vertical_line(int x, int y0, int y1, SDL_Color color) 
     SDL_Rect rect = {x,y0,1,y1-y0};
     uint32_t c = SDL_MapRGBA(buffer.first->format,color.r,color.g,color.b,color.a);
     SDL_FillRect(buffer.first,&rect,c);
+
 }
+
+void RenderWindow::drawShaded(const std::string &str, TTF_Font *font, int2 p, SDL_Color fg, SDL_Color bg, bool isCentered) {
+    SDL_Surface* surface = TTF_RenderText_Shaded(font,str.c_str(),fg,bg);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer,surface);
+    SDL_Rect r; r.x = p.x; r.y = p.y; r.w = surface->w; r.h = surface->h;
+    if(isCentered) {
+        r.x -= r.w/2;
+        r.y -= r.h/2;
+    }
+    SDL_FreeSurface(surface);
+    SDL_RenderCopy(renderer, texture, nullptr, &r);
+    SDL_DestroyTexture(texture);
+}
+
+void RenderWindow::render(SDL_Surface* surface, SDL_Rect *srcRect, SDL_Rect *dstRect) {
+
+    SDL_BlitSurface(surface,srcRect,buffer.first,dstRect);
+//    SDL_BlitScaled(surface,srcRect,buffer.first,dstRect);
+    SDL_FreeSurface(surface);
+}
+
+void RenderWindow::render(int x, int y, uint32_t color) {
+    auto * const target_pixel = (Uint32 *) ((Uint8 *) buffer.first->pixels
+                                            + y * buffer.first->pitch
+                                            + x * buffer.first->format->BytesPerPixel);
+    *target_pixel = color;
+}
+
+SDL_Renderer* RenderWindow::GetRenderer() {
+    return renderer;
+}
+
+void RenderWindow::draw( Sprite *sprite, int x, int y, int frame) {
+    SDL_Rect dst = {x,y,sprite->GetWidth(),sprite->GetHeight()};
+    SDL_Rect src = (*sprite)[frame];
+    SDL_RenderCopy(renderer,sprite->SDL_Tex(),&src,&dst);
+
+}
+
+
+
 
 
 

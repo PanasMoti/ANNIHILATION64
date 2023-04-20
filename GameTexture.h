@@ -1,28 +1,26 @@
 //
-// Created by elias on 17/04/2023.
+// Created by juicylucy on 4/20/23.
 //
 
 #ifndef ANNIHILATION64_GAMETEXTURE_H
 #define ANNIHILATION64_GAMETEXTURE_H
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include "linalg.h"
-
-
+#include <iostream>
+#include "picopng.h"
 
 class GameTexture {
+
 public:
     GameTexture();
     ~GameTexture();
     GameTexture(const char* fileName);
-    GameTexture(const GameTexture& other);
-
+    void loadFromFile(const char* fileName);
     int Width() const; int Height() const;
-    SDL_Surface* GetSurface();
-
+    uint32_t& operator[](size_t i);
 private:
-    void NotFoundTexture();
-    SDL_Surface* surface;
+    void NotFound();
+    std::vector<uint32_t> pixels;
     int w;
     int h;
 };

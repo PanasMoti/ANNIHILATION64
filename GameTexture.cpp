@@ -1,51 +1,63 @@
 //
-// Created by elias on 17/04/2023.
+// Created by juicylucy on 4/20/23.
 //
 
 #include "GameTexture.h"
 
 GameTexture::GameTexture() {
-    NotFoundTexture();
+    this->NotFound();
+
 }
 
 GameTexture::~GameTexture() {
-    SDL_FreeSurface(surface);
-    surface = nullptr;
+    this->pixels.clear();
 }
 
 GameTexture::GameTexture(const char *fileName) {
-    surface = IMG_Load(fileName);
+    unsigned long tw,th,error = 0;
+    error = loadImage(pixels,tw,th,fileName);
+    if(error ) {
+        std::cerr << "couldnt load the image:" << fileName << "\t resulting to default texture"<< std::endl;
+        NotFound();
+    } else {
+        w = tw;
+        h = th;
+    }
 }
 
+void GameTexture::loadFromFile(const char *fileName) {
+    unsigned long tw,th,error = 0;
+    std::vector<uint32_t>buffer;
+    error = loadImage(buffer,tw,th,fileName);
+    if(error ) {
+        std::cerr << "couldnt load the image:" << fileName << "\t not changing the current texture" << std::endl;
+    } else {
+        pixels = buffer;
+        w = tw;
+        h = th;
+    }
+}
+
+
+
 int GameTexture::Width() const {
-    return 0;
+    return w;
 }
 
 int GameTexture::Height() const {
-    return 0;
+    return h;
 }
 
-SDL_Surface *GameTexture::GetSurface() {
-    return nullptr;
-}
-
-void GameTexture::NotFoundTexture() {
-    // generating a not found texture
+void GameTexture::NotFound() {
     w = 16; h = 16;
-    uint32_t* pixels = (uint32_t*)malloc(sizeof(uint32_t)*w*h);
-    for(int i = 0; i < w; i ++) {
-        for(int j = 0; j < h; j++) {
-            pixels[i + j*w] = ((i+j)%2 == 0) ? 0xFF00FFFF : 0x00000000;
+    pixels.resize(w*h);
+    for(int x = 0; x < w; x++) {
+        for(int y = 0; y < h; y++) {
+            pixels[x + y*w] = ((x+y)%2 == 0) ? 0xFF00FF : 0x000000;
         }
     }
-    surface = SDL_CreateRGBSurfaceFrom((void*)pixels,w,h,32,4*h,0,0,0,0);
-
 }
 
-GameTexture::GameTexture(const GameTexture &other) {
-    *this = other;
+uint32_t &GameTexture::operator[](size_t i) {
+    return pixels[i];
 }
-
-
-
-

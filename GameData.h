@@ -9,10 +9,15 @@
 
 using namespace linalg::aliases;
 
+#define SHOOTINGCOOLDOWN 0.5f
+
 struct Player {
     float2 pos;
     float2 dir;
     float2 plane;
+    int hp;
+    int ammo;
+    float cooldown;
 };
 
 struct GameData {
@@ -27,10 +32,12 @@ struct GameData {
     std::string level;
     bool is_new_game;
     void init() {
-        res = {640,640};
+        res = {384,216};
         player.pos = static_cast<const linalg::vec<float, 2>>(map.GetPlayerSpawn());
         player.dir = {1,0};
-        player.plane = {0,0.66  };
+        player.plane = {0,0.66};
+        player.ammo = 50;
+        player.cooldown = SHOOTINGCOOLDOWN;
         is_new_game = false;
     }
     void SetMap(const Map& map1) {

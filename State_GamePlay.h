@@ -9,7 +9,8 @@
 #include "GameData.h"
 #include <unordered_map>
 #include "Texture.h"
-
+#include "GameTexture.h"
+#include "Sprite.h"
 
 
 class State_GamePlay : public BaseState{
@@ -26,10 +27,21 @@ public:
 
     void KeyPressed(EventDetails* l_details);
     void KeyReleased(EventDetails* l_details);
+    void DebugLoseHP(EventDetails* l_details);
+    void DebugGainHP(EventDetails* l_details);
 
 private:
+    void RenderBuffer();
+    void RenderHud();
     keyboard keys_state;
-    Texture* test;
+    TTF_Font* hud_font;
+    TTF_Font* info_font;
+    std::string info_text;
+    Texture* heart_img;
+    Texture* bullet_img;
+    GameTexture wallTexture;
+    GameTexture doorTexture;
+    Sprite* sprite;
 };
 
 
