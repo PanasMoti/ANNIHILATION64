@@ -32,8 +32,8 @@ void State_GamePlay::OnCreate() {
     keys_state[100] = false;
     keys_state[115] = false;
     EventManager* evMgr = m_stateMgr->GetContext()->eventMgr;
-    for(int i = 0; i < sizeof(arr); i++) {
-        if(i < sizeof(arr)/2) {
+    for(int i = 0; i < 12; i++) {
+        if(i  < 6) {
             evMgr->AddCallback(StateType::GamePlay,arr[i],&State_GamePlay::KeyPressed,this);
         } else {
             evMgr->AddCallback(StateType::GamePlay,arr[i],&State_GamePlay::KeyReleased,this);
@@ -49,7 +49,7 @@ void State_GamePlay::OnCreate() {
     bullet_img = new Texture(window->loadTexture("assets/bullet.png"));
     bullet_img->Scale(2.0f);
     info_font = window->loadFont("assets/YosterIsland.ttf");
-    info_text = "use [WASD] to move";
+    info_text = "use [WASD] to move\nuse [F] to shoot\npress [E] to interact";
     sprite = new Sprite("assets/pistol",window->GetRenderer());
     sprite->SetSize(500,250);
     sprite->time_between_frames = 0.1f;
@@ -61,7 +61,7 @@ void State_GamePlay::OnCreate() {
 void State_GamePlay::OnDestroy() {
     EventManager* evMgr = m_stateMgr->GetContext()->eventMgr;
 
-    for(int i = 0; i < sizeof(arr); i++) {
+    for(int i = 0; i < 6; i++) {
         evMgr->RemoveCallback(StateType::GamePlay,arr[i]);
     }
     evMgr->RemoveCallback(StateType::GamePlay,"DEBUG_LOSE_HP");
@@ -202,7 +202,9 @@ void State_GamePlay::Update(float dt) {
         int m0y = static_cast<int>(data.player.pos.y);
         int mx = static_cast<int>(data.player.pos.x + dirX*moveSpeed);
         int my = static_cast<int>(data.player.pos.y + dirY*moveSpeed);
-
+        if(data.map(mx,my) == CellType::Door) {
+            data.map(mx,my) = CellType::Empty;
+        }
     }
 }
 
@@ -332,7 +334,7 @@ void State_GamePlay::RenderHud() {
     int& hp = data.player.hp;
     int& ammo = data.player.ammo;
     auto screen_size = window->GetScreenSize();
-    window->draw(info_text,info_font,{0,0},clGRAY);
+    window->draw(info_text,info_font,0,0,400,clGRAY);
     for(int i = 0; i < hp; i++) {
         window->draw(*heart_img,i*heart_img->GetWidth(),screen_size.y-heart_img->GetHeight());
     }
