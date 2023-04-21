@@ -32,7 +32,7 @@ void GameEntities::AddTexture(const GameTexture &gameTexture) {
 }
 
 void GameEntities::SortSprites() {
-    std::sort(entities.rbegin(),entities.rend());
+    std::sort(entities.begin(),entities.end());
 }
 
 void GameEntities::RemoveEntity(int index) {

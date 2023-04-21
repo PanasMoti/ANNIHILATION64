@@ -17,13 +17,15 @@ void State_GameOver::OnCreate() {
     skull = new Sprite("assets/skull",window->GetRenderer());
     you_died_img = new Texture(window->loadTexture("assets/game_over.png"));
     info_font = window->loadFont("assets/YosterIsland.ttf");
-    hud_font = window->loadFont("assets/fonts/Doom2016.ttf",200);
+    hud_font = window->loadFont("assets/Doom2016.ttf",200);
     info_text = "press [Z] to return to the menu\n"
                 "press [ESC] to quit the game";
     skull->time_between_frames = 0.2f;
+    score_font = window->loadFont("assets/Emulogic.ttf",64);
 //    skull->SetFPS(20);
     skull->SetSize(450,450);
     TTF_SetFontWrappedAlign(info_font,TTF_WRAPPED_ALIGN_CENTER);
+    TTF_SetFontStyle(score_font,TTF_STYLE_BOLD | TTF_STYLE_ITALIC);
     EventManager* evMgr = m_stateMgr->GetContext()->eventMgr;
     evMgr->AddCallback(StateType::GameOver,"Return_To_Menu",&State_GameOver::ReturnToMenu,this);
 }
@@ -66,7 +68,7 @@ void State_GameOver::Draw() {
             window->draw("YOU WON!",hud_font,center.x,center.y,clGREEN,true);
         }
     } else {
-        window->draw(std::string("SCORE : ") + std::to_string(GameData::self().score),hud_font,center.x,center.y+250,clCYAN,true);
+        window->draw(std::string("SCORE : ") + std::to_string(GameData::self().score),score_font,center.x,center.y+100,clVIOLET,true);
     }
 }
 

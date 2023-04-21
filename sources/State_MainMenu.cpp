@@ -8,7 +8,6 @@
 #include "header_onlys/DataBase_Response.h"
 #include "header_onlys/GameData.h"
 #include "header_onlys/config.h"
-#include "header_onlys/pcg32.h"
 
 void State_MainMenu::OnCreate() {
     time_passed = 0.0f;

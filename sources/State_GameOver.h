@@ -29,6 +29,7 @@ private:
     std::string info_text;
     bool flicker;
     TTF_Font* hud_font;
+    TTF_Font* score_font;
 
 };
 

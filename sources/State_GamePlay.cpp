@@ -46,7 +46,7 @@ void State_GamePlay::OnCreate() {
     bullet_img = new Texture(window->loadTexture("assets/bullet.png"));
     bullet_img->Scale(2.0f);
     info_font = window->loadFont("assets/YosterIsland.ttf");
-    info_text = "use [WASD] to move\nuse [F] to shoot\npress [E] to interact\n>kill all the enemies\n>find the green british cat flower";
+    info_text = "^use [WASD] to move\n^use [F] to shoot\n^use [E] to interact\n^the barrels will restore your ammo\n#~~GOAL~~#\n *kill all the enemies\n *FIND:\n  -green british cat flower";
     gunSprite = new Sprite("assets/pistol", window->GetRenderer());
     gunSprite->SetSize(500, 250);
     gunSprite->time_between_frames = 0.1f;
@@ -146,16 +146,13 @@ void State_GamePlay::Update(float dt) {
     auto& sprite = GameEntities::self();
     GameData& data = GameData::self();
 
-    auto l = data.map.GetLevelEnd();
-    float2 level_end = {static_cast<float>(l.x)-0.5,static_cast<float>(l.y)-0.5};
+
     if(data.player.hp <= 0) {
         gameOver = true;
     }
     hit_cooldown.x+=dt;
 
-    if((int)data.player.pos.x == l.x && (int)data.player.pos.y == l.y) {
-        gameOver = true;
-    }
+
     auto dist = [](float x1,float y1,float x2,float y2) {
         float dx = x2-x1;
         float dy = y2-y1;
@@ -473,7 +470,7 @@ void State_GamePlay::RenderHud() {
     int& hp = data.player.hp;
     int& ammo = data.player.ammo;
     auto screen_size = window->GetScreenSize();
-    window->draw(info_text,info_font,0,0,400,clGRAY);
+    window->draw(info_text,info_font,0,0,600,clLIME);
     for(int i = 0; i < hp; i++) {
         window->draw(*heart_img,i*heart_img->GetWidth(),screen_size.y-heart_img->GetHeight());
     }
@@ -592,7 +589,7 @@ void State_GamePlay::EnemyAI(float dt) {
         } // DDA
         auto l = linalg::length(ray);
         if(is_seeing_player) {
-            enemy->x += v.x*0.3f*dt*l   ;
+            enemy->x += v.x*0.3f*dt*l;
             enemy->y += v.y*0.3f*dt*l;
         }
     }
