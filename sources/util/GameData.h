@@ -34,7 +34,7 @@ struct GameData {
     void init() {
         res = {384,216};
         player.pos = static_cast<const linalg::vec<float, 2>>(map.GetPlayerSpawn());
-        player.dir = {1,0};
+        player.dir = {-1,0};
         player.plane = {0,0.66};
         player.ammo = 50;
         player.cooldown = SHOOTINGCOOLDOWN;

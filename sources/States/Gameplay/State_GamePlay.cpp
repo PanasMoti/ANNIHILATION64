@@ -154,7 +154,7 @@ void State_GamePlay::Update(float dt) {
             data.player.pos.y -= data.player.dir.y*moveSpeed;
         }
     }
-    if(keys_state[SDLK_d]) {
+    if(keys_state[SDLK_a]) {
         //both camera direction and camera plane must be rotated
         double oldDirX = dirX;
         dirX = dirX * cos(rotSpeed) - dirY * sin(rotSpeed);
@@ -165,7 +165,7 @@ void State_GamePlay::Update(float dt) {
         data.player.plane = {planeX,planeY};
         data.player.dir = {dirX,dirY};
     }
-    if(keys_state[SDLK_a]) {
+    if(keys_state[SDLK_d]) {
         //both camera direction and camera plane must be rotated
         double oldDirX = dirX;
         dirX = dirX * cos(-rotSpeed) - dirY * sin(-rotSpeed);

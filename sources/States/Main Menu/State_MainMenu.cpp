@@ -25,14 +25,13 @@ void State_MainMenu::OnCreate() {
     evMgr->AddCallback(StateType::MainMenu,"Down_Arrow",&State_MainMenu::SelectDown,this);
     this->menu_logo->Scale(1.5f,1.5f);
 
-    menu_background = new Texture(m_stateMgr->GetContext()->window->loadTexture("assets/background.png"));
 }
 
 void State_MainMenu::OnDestroy() {
     TTF_CloseFont(menu_font);
     TTF_CloseFont(info_font);
-    menu_logo->Unload(); menu_background->Unload();
-    delete menu_logo; delete menu_background;
+    menu_logo->Unload();
+    delete menu_logo;
     EventManager* evMgr = m_stateMgr->GetContext()->eventMgr;
     evMgr->RemoveCallback(StateType::MainMenu,"MainMenu_Continue");
     evMgr->RemoveCallback(StateType::MainMenu,"Up_Arrow");
@@ -59,11 +58,9 @@ void State_MainMenu::Draw() {
                      true);
     }
     window->draw(info,info_font,p.x,2*p.y-100,700,{255,255,255,255},true);
-//    window->draw_guidlines({255,64,255,255});
 }
 
 void State_MainMenu::Continue(EventDetails *l_details) {
-    //m_stateMgr->SwitchTo(StateType::GamePlay);
 
     switch (selected) {
         case 0: {

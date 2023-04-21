@@ -25,7 +25,6 @@ private:
     TTF_Font* menu_font;
     TTF_Font* info_font;
     Texture* menu_logo;
-    Texture* menu_background;
     std::string options[3];
     int selected;
     SDL_Color selected_color,default_color;

@@ -23,7 +23,7 @@ void State_MapEdit::OnCreate() {
     info_font = m_stateMgr->GetContext()->window->loadFont("assets/YosterIsland.ttf",32);
     menu_text = "edit your own level";
 
-    info_text = ">press [Z] to return to menu\n>press [ENTER] to change the selected\n>press [SPACE] to continue\n>[1,2,3,4] to change the map size";
+    info_text = ">press [Z] to return to menu\n>press [ENTER] to change the selected\n>press [SPACE] to continue\n>[W,S] to change size";
     EventManager* evMgr = m_stateMgr->GetContext()->eventMgr;
     evMgr->AddCallback(StateType::MapEdit,"Return_To_Menu",&State_MapEdit::ReturnToMenu,this);
     TTF_SetFontStyle(menu_font,TTF_STYLE_ITALIC);
@@ -34,10 +34,8 @@ void State_MapEdit::OnCreate() {
     evMgr->AddCallback(StateType::MapEdit,"MapEdit_Enter_Flip",&State_MapEdit::flip,this);
     evMgr->AddCallback(StateType::MapEdit,"MapEdit_Press_Selected",&State_MapEdit::PressSelected,this);
     evMgr->AddCallback(StateType::MapEdit,"MapEdit_Save",&State_MapEdit::SaveMap,this);
-    evMgr->AddCallback(StateType::MapEdit,"MapEdit_Increase_Width",&State_MapEdit::ChaneMapSize,this);
-    evMgr->AddCallback(StateType::MapEdit,"MapEdit_Increase_Height",&State_MapEdit::ChaneMapSize,this);
-    evMgr->AddCallback(StateType::MapEdit,"MapEdit_Decrease_Width",&State_MapEdit::ChaneMapSize,this);
-    evMgr->AddCallback(StateType::MapEdit,"MapEdit_Decrease_Height",&State_MapEdit::ChaneMapSize,this);
+    evMgr->AddCallback(StateType::MapEdit,"MapEdit_Increase_Size",&State_MapEdit::ChaneMapSize,this);
+    evMgr->AddCallback(StateType::MapEdit,"MapEdit_Decrease_Size",&State_MapEdit::ChaneMapSize,this);
 
 }
 
@@ -55,10 +53,8 @@ void State_MapEdit::OnDestroy() {
     evMgr->RemoveCallback(StateType::MapEdit,"MapEdit_Press_Selected");
     evMgr->RemoveCallback(StateType::MapEdit,"MapEdit_Enter_Flip");
     evMgr->RemoveCallback(StateType::MapEdit,"MapEdit_Save");
-    evMgr->RemoveCallback(StateType::MapEdit,"MapEdit_Increase_Width");
-    evMgr->RemoveCallback(StateType::MapEdit,"MapEdit_Increase_Height");
-    evMgr->RemoveCallback(StateType::MapEdit,"MapEdit_Decrease_Width");
-    evMgr->RemoveCallback(StateType::MapEdit,"MapEdit_Decrease_Height");
+    evMgr->RemoveCallback(StateType::MapEdit,"MapEdit_Increase_Size");
+    evMgr->RemoveCallback(StateType::MapEdit,"MapEdit_Decrease_Size");
 
     sqlite3_close(DB);
 }
@@ -223,22 +219,18 @@ void State_MapEdit::NotAllowed() {
 }
 
 void State_MapEdit::ChaneMapSize(EventDetails *l_details) {
-    int key = l_details->keyCode - 48;
+    int key = l_details->keyCode;
     int w = map.GetWidth(), h = map.GetHeight();
     switch (key) {
-        case 1:
+        case SDLK_w:
             // increase width
             if(w<32) map.SetWidth(w+1);
-            break;
-        case 2:
             // increase height
             if(h<32) map.SetHeight(h+1);
             break;
-        case 3:
+        case SDLK_s:
             // decrease width
             if(w>16) map.SetWidth(w-1);
-            break;
-        case 4:
             // decrease height:
             if(h>16) map.SetHeight(h-1);
             break;
