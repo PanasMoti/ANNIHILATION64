@@ -11,12 +11,14 @@ const char* arr[] = {
         "Right_Press",
         "Backward_Press",
         "Shoot_Press",
+        "GamePlay_Interact_Press",
 // -----------------------------
         "Forward_Release",
         "Left_Release",
         "Right_Release",
         "Backward_Release",
-        "Shoot_Release"
+        "Shoot_Release",
+        "GamePlay_Interact_Release"
 };
 
 State_GamePlay::State_GamePlay(StateManager *l_stateManager) : BaseState(l_stateManager) {
@@ -30,8 +32,8 @@ void State_GamePlay::OnCreate() {
     keys_state[100] = false;
     keys_state[115] = false;
     EventManager* evMgr = m_stateMgr->GetContext()->eventMgr;
-    for(int i = 0; i < 10; i++) {
-        if(i < 5) {
+    for(int i = 0; i < sizeof(arr); i++) {
+        if(i < sizeof(arr)/2) {
             evMgr->AddCallback(StateType::GamePlay,arr[i],&State_GamePlay::KeyPressed,this);
         } else {
             evMgr->AddCallback(StateType::GamePlay,arr[i],&State_GamePlay::KeyReleased,this);
@@ -41,7 +43,7 @@ void State_GamePlay::OnCreate() {
     evMgr->AddCallback(StateType::GamePlay,"DEBUG_GAIN_HP",&State_GamePlay::DebugGainHP,this);
     RenderWindow* window = m_stateMgr->GetContext()->window;
     doorTexture = GameTexture("assets/door.png");
-    wallTexture = GameTexture("assets/wall.png");
+    wallTexture = GameTexture("assets/redbrick.png");
     heart_img = new Texture(window->loadTexture("assets/heart.png"));
     heart_img->Scale(10.5f);
     bullet_img = new Texture(window->loadTexture("assets/bullet.png"));
@@ -59,7 +61,7 @@ void State_GamePlay::OnCreate() {
 void State_GamePlay::OnDestroy() {
     EventManager* evMgr = m_stateMgr->GetContext()->eventMgr;
 
-    for(int i = 0; i < 10; i++) {
+    for(int i = 0; i < sizeof(arr); i++) {
         evMgr->RemoveCallback(StateType::GamePlay,arr[i]);
     }
     evMgr->RemoveCallback(StateType::GamePlay,"DEBUG_LOSE_HP");
@@ -76,6 +78,7 @@ void State_GamePlay::Activate() {
     auto find_str = [](std::string s,std::string del) {
         int end = s.find(del);
         std::vector<std::string> vec;
+
         while(end != -1) {
             // Loop until no delimiter is left in the string
             vec.push_back(s.substr(0,end));
@@ -193,6 +196,13 @@ void State_GamePlay::Update(float dt) {
         if(data.player.cooldown < SHOOTINGCOOLDOWN) {
             data.player.cooldown-=dt;
         }
+    }
+    if(keys_state[SDLK_e]) {
+        int m0x = static_cast<int>(data.player.pos.x);
+        int m0y = static_cast<int>(data.player.pos.y);
+        int mx = static_cast<int>(data.player.pos.x + dirX*moveSpeed);
+        int my = static_cast<int>(data.player.pos.y + dirY*moveSpeed);
+
     }
 }
 
