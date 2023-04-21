@@ -41,6 +41,8 @@ public:
     void AddTexture(const GameTexture& gameTexture);
     void AddEntity(const BaseEntity& entity1);
     void AddEntity(float x,float y,int texture);
+    void RemoveEntity(int index);
+    int FindEntity(float x,float y,int texture);
     int numEntities() const;
 
     void SyncSize();

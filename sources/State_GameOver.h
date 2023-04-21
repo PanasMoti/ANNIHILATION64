@@ -27,6 +27,8 @@ private:
     Texture* you_died_img;
     TTF_Font* info_font;
     std::string info_text;
+    bool flicker;
+    TTF_Font* hud_font;
 
 };
 

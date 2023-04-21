@@ -30,5 +30,6 @@ static const SDL_Color clPURPLE = {128,0,128,255};
 static const SDL_Color clVIOLET = {238,130,238,255};
 static const SDL_Color clLIME = {50,205,50};
 static const SDL_Color clGRAY = {128,128,128,255};
+static const SDL_Color clDARKCYAN = {	0, 139, 139,255};
 
 #endif //ANNIHILATION64_COLORS_H

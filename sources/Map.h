@@ -25,7 +25,7 @@ enum class CellType{
 
 
 static std::ostream& operator<<(std::ostream& os, const CellType& cellType) {
-    char const *rets[] = {"Empty","Wall","Door","PlayerSpawn","EnemySpawn","ItemSpawn","LevelEnd"};
+    char const *rets[] = {"Empty","Wall","Door","PlayerSpawn","enemySpawn","ItemSpawn","LevelEnd"};
     return os << rets[static_cast<int>(cellType)][0];
 }
 static std::string ToString(const CellType& cellType) {
@@ -95,6 +95,8 @@ public:
     void SetMap(const std::string& str);
     std::vector<int2> GetEnemiesSpawn() const;
     std::vector<int2> GetItemsSpawn() const;
+    int2 GetLevelEnd() const;
+    void FinishLevel();
 private:
     void UpdateSize();
     int2 size;

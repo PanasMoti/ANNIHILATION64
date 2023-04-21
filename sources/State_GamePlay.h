@@ -32,6 +32,9 @@ public:
     void DebugLoseHP(EventDetails* l_details);
     void DebugGainHP(EventDetails* l_details);
     void GameOver();
+    void PlayerEntityCollision(int index);
+
+    void EnemyAI(float dt);
 
 private:
 
@@ -46,8 +49,11 @@ private:
     GameTexture wallTexture;
     GameTexture doorTexture;
     Sprite* gunSprite;
+    bool player_shot;
 
     std::vector<double> ZBuffer;
+    bool gameOver;
+    float2 hit_cooldown;
 
 };
 

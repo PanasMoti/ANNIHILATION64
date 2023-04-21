@@ -46,11 +46,12 @@ void State_GamePlay::OnCreate() {
     bullet_img = new Texture(window->loadTexture("assets/bullet.png"));
     bullet_img->Scale(2.0f);
     info_font = window->loadFont("assets/YosterIsland.ttf");
-    info_text = "use [WASD] to move\nuse [F] to shoot\npress [E] to interact";
+    info_text = "use [WASD] to move\nuse [F] to shoot\npress [E] to interact\n>kill all the enemies\n>find the green british cat flower";
     gunSprite = new Sprite("assets/pistol", window->GetRenderer());
     gunSprite->SetSize(500, 250);
     gunSprite->time_between_frames = 0.1f;
     ZBuffer.resize(GameData::self().res.x);
+
 
 }
 
@@ -65,10 +66,12 @@ void State_GamePlay::OnDestroy() {
 }
 
 void State_GamePlay::Activate() {
+    player_shot = false;
     //TODO: process the level into the map;
 //    std::cout << GameData::self().level << std::endl;
     m_stateMgr->GetContext()->window->create_buffer();
     GameData& gameData = GameData::self();
+    hit_cooldown = {0.0f,1.0f};
     Map map;
     std::string level = gameData.level;
     auto find_str = [](std::string s,std::string del) {
@@ -90,7 +93,6 @@ void State_GamePlay::Activate() {
         str.erase(str.begin(),str.begin() + str.find("=") + 1);
     };
     std::for_each(vec.begin(),vec.end(),trim);
-//    std::for_each(vec.begin(),vec.end(),[](std::string& str){printf("[%s]\n",str.c_str());});
     //vec[0] = PASSWORD
     //vec[1] = WIDTH
     //vec[2] = HEIGHT
@@ -103,14 +105,15 @@ void State_GamePlay::Activate() {
     int ammo = std::stoi(vec[5]);
     map.SetSize(width,height);
     map.SetMap(vec[3]);
-
+    gameData.score = 0;
     gameData.SetMap(map);
     gameData.player.hp = hp;
     gameData.player.ammo = ammo;
     GameEntities& sprite = GameEntities::self();
     sprite.AddTexture("assets/sprite/barrel.png");
     sprite.AddTexture("assets/sprite/greenlight.png");
-    sprite.AddTexture("assets/sprite/enemy1.png");
+    sprite.AddTexture((vec[0] == "FNAF") ? "assets/sprite/DONOTUSE.png" : "assets/sprite/enemy1.png");
+    sprite.AddTexture("assets/sprite/level_end.png");
     auto enemy_vec = gameData.map.GetEnemiesSpawn();
     for(auto enemy: enemy_vec) {
         sprite.AddEntity(static_cast<float>(enemy.x) + 0.5,static_cast<float>(enemy.y) + 0.5,2);
@@ -120,23 +123,57 @@ void State_GamePlay::Activate() {
         sprite.AddEntity(static_cast<float>(item.x) + 0.5,static_cast<float>(item.y) + 0.5,0);
     }
     auto p = gameData.map.GetPlayerSpawn();
-    sprite.AddEntity(static_cast<float>(p.x),static_cast<float>(p.y),1);
-//    sprite.AddEntity(3,2,1);
+    sprite.AddEntity(static_cast<float>(p.x) -0.5,static_cast<float>(p.y)-0.5,1);
+    auto l = gameData.map.GetLevelEnd();
+    sprite.AddEntity(static_cast<float>(l.x)-0.5,static_cast<float>(l.y)-0.5,3);
+
+    gameOver =false;
 
 }
 
 void State_GamePlay::Deactivate() {
-
+    GameEntities& sprite = GameEntities::self();
+    sprite.entity.clear();
+    sprite.entities.clear();
+    sprite.textures.clear();
+    gameOver = false;
+    keys_state.clear();
 }
 
 void State_GamePlay::Update(float dt) {
 //    std::cout << dt << std::endl;
-
+    if(player_shot) player_shot = false;
+    auto& sprite = GameEntities::self();
     GameData& data = GameData::self();
 
+    auto l = data.map.GetLevelEnd();
+    float2 level_end = {static_cast<float>(l.x)-0.5,static_cast<float>(l.y)-0.5};
     if(data.player.hp <= 0) {
-        GameOver();
+        gameOver = true;
     }
+    hit_cooldown.x+=dt;
+
+    if((int)data.player.pos.x == l.x && (int)data.player.pos.y == l.y) {
+        gameOver = true;
+    }
+    auto dist = [](float x1,float y1,float x2,float y2) {
+        float dx = x2-x1;
+        float dy = y2-y1;
+        return sqrtf((dx*dx)+(dy*dy));
+    };
+    int i = 0; int count_enemies = 0;
+    for(auto ent : sprite.entity) {
+        if(dist(data.player.pos.x,data.player.pos.y,ent.x,ent.y) <= 0.5f) {
+            PlayerEntityCollision(i);
+
+        }
+        if(ent.texture == 2) count_enemies++;
+        i++;
+    }
+    if(count_enemies == 0) data.map.FinishLevel();
+
+
+    if(gameOver) GameOver();
 
     gunSprite->Update(dt);
     float moveSpeed = 5.0f*dt;
@@ -197,6 +234,7 @@ void State_GamePlay::Update(float dt) {
                 gunSprite->StartPlaying();
                 if(--data.player.ammo < 0) data.player.ammo = 0;
             }
+            player_shot = true;
         }
         data.player.cooldown-=dt;
 
@@ -206,7 +244,7 @@ void State_GamePlay::Update(float dt) {
                 data.player.cooldown = SHOOTINGCOOLDOWN;
                 gunSprite->StartPlaying();
             }
-
+            player_shot = true;
         }
     }
     if(!keys_state[SDLK_f]) {
@@ -223,6 +261,8 @@ void State_GamePlay::Update(float dt) {
             data.map(mx,my) = CellType::Empty;
         }
     }
+    EnemyAI(dt);
+
 }
 
 void State_GamePlay::Draw() {
@@ -266,7 +306,6 @@ void State_GamePlay::RenderBuffer() {
         float perpWallDist;
         //what direction to step in x or y-direction (either +1 or -1)
         int2 step;
-        int hit = 0; // was there a wall hit?
         int side; // was a NS or an EW wall hit?
         //calculate step and initial sideDist
         if(raydir.x < 0) {
@@ -339,10 +378,7 @@ void State_GamePlay::RenderBuffer() {
             }
 
         }
-//        else {
-//            SDL_Color color = ToColor(cell);
-//            window->render_vertical_line(x, drawStart, drawEnd, color);
-//        }
+
         ZBuffer[x] = perpWallDist;
     } // WALL CASTING
     // -------------------------
@@ -406,14 +442,23 @@ void State_GamePlay::RenderBuffer() {
             //3) it's on the screen (right)
             //4) ZBuffer, with perpendicular distance
             if (transformY > 0 && stripe > 0 && stripe < w && transformY < ZBuffer[stripe]) {
-                for (int y = drawStartY; y < drawEndY; y++) //for every pixel of the current stripe
-                {
-                    int d = (y) * 256 - h * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
-                    int texY = ((d * texHeight) / spriteHeight) / 256;
-                    Uint32 color = sprite.textures[sprite.entity[sprite.entities[i].first].texture][texWidth * texY +
-                                                                           texX]; //get current color from the texture
-                    if ((color & 0x00FFFFFF) != 0)
-                        window->render(stripe,y,color);
+                if(player_shot && sprite.entity[sprite.entities[i].first].texture == 2 && abs(w/2-stripe) <= 1) {
+                    sprite.RemoveEntity(sprite.entities[i].first);
+                    stripe = drawEndX;
+                    player_shot = false;
+                    data.score++;
+                }
+                else {
+                    for (int y = drawStartY; y < drawEndY; y++) //for every pixel of the current stripe
+                    {
+                        int d = (y) * 256 - h * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
+                        int texY = ((d * texHeight) / spriteHeight) / 256;
+                        Uint32 color = sprite.textures[sprite.entity[sprite.entities[i].first].texture][
+                                texWidth * texY +
+                                texX]; //get current color from the texture
+                        if ((color & 0x00FFFFFF) != 0)
+                            window->render(stripe, y, color);
+                    }
                 }
             }
         }
@@ -444,7 +489,6 @@ void State_GamePlay::RenderHud() {
 
 void State_GamePlay::DebugLoseHP(EventDetails *l_details) {
     GameData& data = GameData::self();
-    data.player.hp;
     if(--data.player.hp < 0) data.player.hp = 0;
 }
 
@@ -457,3 +501,101 @@ void State_GamePlay::DebugGainHP(EventDetails *l_details) {
 void State_GamePlay::GameOver() {
     m_stateMgr->SwitchTo(StateType::GameOver);
 }
+
+void State_GamePlay::PlayerEntityCollision(int index) {
+    GameEntities& sprite = GameEntities::self();
+    GameData& data = GameData::self();
+    auto& ent = sprite.entity[index];
+    switch (ent.texture) {
+        case 0:
+            // item
+//            std::cout << "item" << std::endl;
+            if(data.player.ammo != 50) {
+                data.player.ammo+=10;
+                if(data.player.ammo > 50) data.player.ammo = 50;
+                sprite.RemoveEntity(index);
+            }
+            break;
+        case 1:
+            // player spawn -- ignore
+            break;
+        case 2:
+            if(hit_cooldown.x >= hit_cooldown.y) {
+                if(--data.player.hp < 0) data.player.hp = 0;
+                hit_cooldown.x = 0.0f;
+            }
+            break;
+        case 3:
+            // level end -- game over
+            gameOver = true;
+            break;
+        default:
+            // nothing currently
+            break;
+    }
+}
+
+void State_GamePlay::EnemyAI(float dt) {
+    auto& sprite = GameEntities::self();
+    std::vector<BaseEntity*> enemies;
+    auto& data = GameData::self();
+    for(auto& ent : sprite.entity) {
+        if(ent.texture == 2) enemies.push_back(&ent);
+    }
+    for(auto* enemy: enemies) {
+        float2 player_pos = GameData::self().player.pos;
+        float2 enemy_pos = {enemy->x,enemy->y};
+        float2 ray = player_pos-enemy_pos;
+        int mapX = static_cast<int>(enemy_pos.x);
+        int mapY = static_cast<int>(enemy_pos.y);
+        float2 v = linalg::normalize(ray);
+        float2 sideDist;
+        //length of ray from one x or y-side to next x or y-side
+        float2 deltaDist = {
+                (v.x == 0) ? static_cast<float>(1e30) : std::abs(1/v.x),
+                (v.y == 0) ? static_cast<float>(1e30) : std::abs(1/v.y)
+        };
+        bool is_seeing_player = true;
+        //what direction to step in x or y-direction (either +1 or -1)
+        int2 step;
+        //calculate step and initial sideDist
+        if(v.x < 0) {
+            step.x = -1;
+            sideDist.x = (enemy_pos.x -mapX)*deltaDist.x;
+        } else {
+            step.x = 1;
+            sideDist.x = (mapX + 1.0 - enemy_pos.x)*deltaDist.x;
+        }
+        if(v.x < 0) {
+            step.y = -1;
+            sideDist.y = (enemy_pos.y - mapY)*deltaDist.y;
+        } else {
+            step.y = 1;
+            sideDist.y = (mapY + 1.0 - enemy_pos.y)*deltaDist.y;
+        }
+        //perform DDA
+        while(linalg::length(sideDist) < linalg::length(ray)) {
+            //jump to next map square, either in x-direction, or in y-direction
+            if (sideDist.x < sideDist.y)
+            {
+                sideDist.x += deltaDist.x;
+                mapX += step.x;
+            }
+            else
+            {
+                sideDist.y += deltaDist.y;
+                mapY += step.y;
+            }
+            //Check if ray has hit a wall
+            if (data.map(mapX,mapY) == CellType::Wall || data.map(mapX,mapY) == CellType::Door) { is_seeing_player = false;break; }
+
+        } // DDA
+        auto l = linalg::length(ray);
+        if(is_seeing_player) {
+            enemy->x += v.x*0.3f*dt*l   ;
+            enemy->y += v.y*0.3f*dt*l;
+        }
+    }
+}
+
+

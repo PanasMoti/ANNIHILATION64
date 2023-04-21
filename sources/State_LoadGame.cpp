@@ -128,11 +128,11 @@ void State_LoadGame::Backspace(EventDetails *l_details) {
     if(password.length() != 0) password.pop_back();
 }
 void State_LoadGame::Activate() {
-    enter_guard = false;
+    enter_guard = false; IsFoundInDB = false;
     sqlite3_open(DB_PATH,&DB);
 }
 void State_LoadGame::Deactivate() {
-    sqlite3_close(DB);
+    sqlite3_close(DB); IsFoundInDB = false;
 }
 
 void State_LoadGame::SubmitInput(EventDetails *l_details) {

@@ -34,3 +34,19 @@ void GameEntities::AddTexture(const GameTexture &gameTexture) {
 void GameEntities::SortSprites() {
     std::sort(entities.rbegin(),entities.rend());
 }
+
+void GameEntities::RemoveEntity(int index) {
+    entity.erase(entity.begin() + index);
+    entities.erase(entities.begin() + index);
+}
+
+int GameEntities::FindEntity(float x, float y, int texture) {
+    int i = 0;
+    for(auto& ent : entity) {
+        if(ent.x == x && ent.y == y && ent.texture == texture) {
+            return i;
+        }
+        i++;
+    }
+    return -1;
+}

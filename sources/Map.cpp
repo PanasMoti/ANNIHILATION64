@@ -131,3 +131,20 @@ std::vector<int2> Map::GetItemsSpawn() const {
     }
     return vec;
 }
+
+int2 Map::GetLevelEnd() const {
+    for(int x = 0; x < GetWidth(); x++) {
+        for(int y = 0; y < GetHeight(); y++) {
+            if((*this)(x,y) == CellType::LevelEnd) {
+                return {x,y};
+            }
+        }
+    }
+    return {1,1};
+}
+
+void Map::FinishLevel() {
+    int2 level_end = GetLevelEnd();
+    SetSize(size);
+    (*this)(level_end.x,level_end.y) = CellType::LevelEnd;
+}

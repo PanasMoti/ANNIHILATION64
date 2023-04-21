@@ -8,6 +8,7 @@
 #include "header_onlys/DataBase_Response.h"
 #include "header_onlys/GameData.h"
 #include "header_onlys/config.h"
+#include "header_onlys/pcg32.h"
 
 void State_MainMenu::OnCreate() {
     time_passed = 0.0f;
@@ -67,7 +68,11 @@ void State_MainMenu::Continue(EventDetails *l_details) {
             DataBase_Response &response = DataBase_Response::self();
             sqlite3 *DB;
             sqlite3_open(DB_PATH, &DB);
+            auto c = (rand()%100);
             const char *query = "SELECT * FROM GAME WHERE PASSWORD = 'NEWGAME';";
+            if(c <= 10) {
+                query = "SELECT * FROM GAME WHERE PASSWORD = 'FNAF';";
+            }
             const char *data;
             char *errmsg;
             sqlite3_exec(DB, query, callback, (void *) data, &errmsg);
@@ -106,8 +111,10 @@ void State_MainMenu::SelectDown(EventDetails *l_details) {
 }
 
 void State_MainMenu::Activate() {
-
+    GameData::self().is_new_game = false;
+    DataBase_Response::self().str = "";
+    selected = 0;
 }
 void State_MainMenu::Deactivate() {
-
+    selected = 0;
 }

@@ -31,6 +31,7 @@ struct GameData {
     Player player;
     std::string level;
     bool is_new_game;
+    int score;
     void init() {
         res = {384,216};
         player.pos = static_cast<const linalg::vec<float, 2>>(map.GetPlayerSpawn());
@@ -39,6 +40,7 @@ struct GameData {
         player.ammo = 50;
         player.cooldown = SHOOTINGCOOLDOWN;
         is_new_game = false;
+        score = 0;
     }
     void SetMap(const Map& map1) {
         map = map1;
