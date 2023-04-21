@@ -4,13 +4,13 @@
 
 #ifndef ANNIHILATION64_STATE_GAMEPLAY_H
 #define ANNIHILATION64_STATE_GAMEPLAY_H
-#include "../StateManager.h"
+#include "../State Manager/StateManager.h"
 #include <SDL2/SDL.h>
 #include "../../util/GameData.h"
 #include <unordered_map>
-#include "../../gfx/Texture.h"
-#include "../../gfx/GameTexture.h"
-#include "../../gfx/Sprite.h"
+#include "../../gfx/Texture/Texture.h"
+#include "../../gfx/Game Texture/GameTexture.h"
+#include "../../gfx/Sprite/Sprite.h"
 
 
 class State_GamePlay : public BaseState{

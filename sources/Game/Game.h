@@ -1,9 +1,9 @@
 #pragma once
 
-#include "RenderWindow.h"
-#include "util/config.h"
-#include "States/Events/EventManager.h"
-#include "States/StateManager.h"
+#include "../Render Window/RenderWindow.h"
+#include "../util/config.h"
+#include "../States/Events/EventManager.h"
+#include "../States/State Manager/StateManager.h"
 
 struct Clock {
     uint32_t last_tick_time = 0;

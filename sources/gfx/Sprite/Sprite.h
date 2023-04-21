@@ -4,7 +4,7 @@
 
 #ifndef ANNIHILATION64_SPRITE_H
 #define ANNIHILATION64_SPRITE_H
-#include "Texture.h"
+#include "../Texture/Texture.h"
 
 class Sprite : public Texture{
 public:

@@ -5,7 +5,7 @@
 #ifndef ANNIHILATION64_GAMEDATA_H
 #define ANNIHILATION64_GAMEDATA_H
 #include "../import/linalg.h"
-#include "../Map.h"
+#include "../Map/Map.h"
 
 using namespace linalg::aliases;
 

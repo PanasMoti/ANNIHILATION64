@@ -6,7 +6,7 @@
 #define ANNIHILATION64_TEXTURE_H
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include "../import/linalg.h"
+#include "../../import/linalg.h"
 #include <ostream>
 using namespace linalg::aliases;
 

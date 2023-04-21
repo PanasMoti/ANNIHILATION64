@@ -27,24 +27,24 @@ find_package(nlohmann_json 3.2.0 REQUIRED)
 # Add executable
 add_executable(${PROJECT_NAME} sources/main.cpp
         sources/util/config.h
-        sources/RenderWindow.h sources/RenderWindow.cpp
+        "sources/Render Window/RenderWindow.h" "sources/Render Window/RenderWindow.cpp"
         sources/import/linalg.h sources/States/BaseState.h
         sources/States/Events/EventManager.h sources/States/Events/EventManager.cpp
-        sources/States/StateManager.h sources/States/StateManager.cpp
-        sources/Game.h sources/Game.cpp
+        "sources/States/State Manager/StateManager.h" "sources/States/State Manager/StateManager.cpp"
+        sources/Game/Game.h sources/Game/Game.cpp
         "sources/States/Main Menu/State_MainMenu.cpp" "sources/States/Main Menu/State_MainMenu.h"
-        sources/gfx/Texture.cpp sources/gfx/Texture.h
+        sources/gfx/Texture/Texture.cpp sources/gfx/Texture/Texture.h
         "sources/States/Load Game/State_LoadGame.cpp" "sources/States/Load Game/State_LoadGame.h"
         "sources/States/Map Editor/State_MapEdit.cpp" "sources/States/Map Editor/State_MapEdit.h"
-        sources/Map.cpp sources/Map.h
+        sources/Map/Map.cpp sources/Map/Map.h
         sources/States/Gameplay/State_GamePlay.cpp sources/States/Gameplay/State_GamePlay.h
         sources/util/GameData.h sources/util/DataBase_Response.h
         sources/util/Colors.h sources/import/picopng.h
-        sources/gfx/GameTexture.cpp sources/gfx/GameTexture.h
-        sources/gfx/Sprite.cpp sources/gfx/Sprite.h
+        "sources/gfx/Game Texture/GameTexture.cpp" "sources/gfx/Game Texture/GameTexture.h"
+        sources/gfx/Sprite/Sprite.cpp sources/gfx/Sprite/Sprite.h
         sources/util/fileutil.h
         "sources/States/Game Over/State_GameOver.cpp" "sources/States/Game Over/State_GameOver.h"
-        sources/gfx/GameSprite.cpp sources/gfx/GameSprite.h
+        "sources/gfx/Game Sprite/GameSprite.cpp" "sources/gfx/Game Sprite/GameSprite.h"
         )
 
 

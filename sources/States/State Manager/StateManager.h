@@ -1,7 +1,7 @@
 #pragma once
 
-#include "BaseState.h"
-#include "Events/EventManager.h"
+#include "../BaseState.h"
+#include "../Events/EventManager.h"
 #include <utility>
 #include <unordered_map>
 

@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "Game.h"
+#include "Game/Game.h"
 #include "util/GameData.h"
 
 

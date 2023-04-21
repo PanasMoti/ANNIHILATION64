@@ -7,7 +7,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <iostream>
-#include "../import/picopng.h"
+#include "../../import/picopng.h"
 
 class GameTexture {
 
