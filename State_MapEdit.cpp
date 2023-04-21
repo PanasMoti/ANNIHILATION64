@@ -198,7 +198,7 @@ void State_MapEdit::SaveMap(EventDetails *l_details) {
 }
 
 void State_MapEdit::Activate() {
-    sqlite3_open("../data/storage.db",&DB);
+    sqlite3_open(DB_PATH,&DB);
     map.SetSize(map.GetSize());
     written_to_db = false;
     custom_pass = random_string(rand()%17 + 1);

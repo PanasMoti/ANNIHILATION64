@@ -6,6 +6,7 @@
 #include <iostream>
 #include "GameData.h"
 #include "DataBase_Response.h"
+#include "config.h"
 
 State_LoadGame::State_LoadGame(StateManager *l_stateManager) : BaseState(l_stateManager) {
     OnCreate();
@@ -128,7 +129,7 @@ void State_LoadGame::Backspace(EventDetails *l_details) {
 }
 void State_LoadGame::Activate() {
     enter_guard = false;
-    sqlite3_open("../data/storage.db",&DB);
+    sqlite3_open(DB_PATH,&DB);
 }
 void State_LoadGame::Deactivate() {
     sqlite3_close(DB);

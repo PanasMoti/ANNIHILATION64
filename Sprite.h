@@ -20,11 +20,15 @@ public:
     bool isPlaying();
     int GetCurrentFrameIndex() const;
     float time_between_frames;
+    void SetFPS(int fps);
+    void ToggleLoop();
+    void resetPlayer();
 protected:
     void Init(const char* img,const char* json,SDL_Renderer* renderer);
     std::vector<SDL_Rect> frames;
     std::pair<bool,int> player;
     float temp_time;
+    bool is_looping;
 };
 
 

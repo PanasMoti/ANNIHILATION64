@@ -76,13 +76,17 @@ Texture RenderWindow::loadTexture(const char *fileName) {
     return Texture(fileName,renderer);
 }
 
-void RenderWindow::draw(const Texture& texture, int2 pos) {
+void RenderWindow::draw(const Texture& texture, int2 pos,bool2 isCentered) {
     SDL_Rect sdlRect {pos.x,pos.y,texture.GetWidth(),texture.GetHeight()};
+    if(isCentered.x) sdlRect.x -= sdlRect.w/2;
+    if(isCentered.y) sdlRect.y -= sdlRect.h/2;
     SDL_RenderCopy(renderer,texture.SDL_Tex(), nullptr,&sdlRect);
 }
 
-void RenderWindow::draw(const Texture& texture, int x, int y) {
+void RenderWindow::draw(const Texture& texture, int x, int y,bool2 isCentered) {
     SDL_Rect sdlRect = {x,y,texture.GetWidth(),texture.GetHeight()};
+    if(isCentered.x) sdlRect.x -= sdlRect.w/2;
+    if(isCentered.y) sdlRect.y -= sdlRect.h/2;
     SDL_RenderCopy(renderer,texture.SDL_Tex(), nullptr,&sdlRect);
 }
 
@@ -294,9 +298,11 @@ SDL_Renderer* RenderWindow::GetRenderer() {
     return renderer;
 }
 
-void RenderWindow::draw( Sprite *sprite, int x, int y, int frame) {
+void RenderWindow::draw( Sprite *sprite, int x, int y, int frame,bool2 isCentered) {
     SDL_Rect dst = {x,y,sprite->GetWidth(),sprite->GetHeight()};
     SDL_Rect src = (*sprite)[frame];
+    if(isCentered.x) dst.x -= dst.w/2;
+    if(isCentered.y) dst.y -= dst.h/2;
     SDL_RenderCopy(renderer,sprite->SDL_Tex(),&src,&dst);
 
 }

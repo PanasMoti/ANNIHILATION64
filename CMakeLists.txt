@@ -40,7 +40,7 @@ add_executable(${PROJECT_NAME} main.cpp
         State_GamePlay.cpp State_GamePlay.h
         GameData.h DataBase_Response.h
         Colors.h picopng.h
-        GameTexture.cpp GameTexture.h Sprite.cpp Sprite.h fileutil.h)
+        GameTexture.cpp GameTexture.h Sprite.cpp Sprite.h fileutil.h State_GameOver.cpp State_GameOver.h)
 
 
 

@@ -26,11 +26,7 @@ State_GamePlay::State_GamePlay(StateManager *l_stateManager) : BaseState(l_state
 }
 
 void State_GamePlay::OnCreate() {
-//    m_stateMgr->GetContext()->window->create_buffer();
-    keys_state[119] = false;
-    keys_state[97] = false;
-    keys_state[100] = false;
-    keys_state[115] = false;
+
     EventManager* evMgr = m_stateMgr->GetContext()->eventMgr;
     for(int i = 0; i < 12; i++) {
         if(i  < 6) {
@@ -50,9 +46,9 @@ void State_GamePlay::OnCreate() {
     bullet_img->Scale(2.0f);
     info_font = window->loadFont("assets/YosterIsland.ttf");
     info_text = "use [WASD] to move\nuse [F] to shoot\npress [E] to interact";
-    sprite = new Sprite("assets/pistol",window->GetRenderer());
-    sprite->SetSize(500,250);
-    sprite->time_between_frames = 0.1f;
+    gunSprite = new Sprite("assets/pistol", window->GetRenderer());
+    gunSprite->SetSize(500, 250);
+    gunSprite->time_between_frames = 0.1f;
 
 
 
@@ -120,10 +116,16 @@ void State_GamePlay::Deactivate() {
 
 void State_GamePlay::Update(float dt) {
 //    std::cout << dt << std::endl;
-    sprite->Update(dt);
+
+    GameData& data = GameData::self();
+
+    if(data.player.hp <= 0) {
+        GameOver();
+    }
+
+    gunSprite->Update(dt);
     float moveSpeed = 5.0f*dt;
     float rotSpeed = 3.0f*dt;
-    GameData& data = GameData::self();
     float dirX = data.player.dir.x;
     float dirY = data.player.dir.y;
     float planeX = data.player.plane.x;
@@ -176,18 +178,18 @@ void State_GamePlay::Update(float dt) {
     }
     if(keys_state[SDLK_f]) {
         if(data.player.cooldown == SHOOTINGCOOLDOWN) {
-            if(!sprite->isPlaying()) {
-                sprite->StartPlaying();
+            if(!gunSprite->isPlaying()) {
+                gunSprite->StartPlaying();
                 if(--data.player.ammo < 0) data.player.ammo = 0;
             }
         }
         data.player.cooldown-=dt;
 
         if(data.player.cooldown <= 0 ) {
-            if(!sprite->isPlaying()) {
+            if(!gunSprite->isPlaying()) {
                 if(--data.player.ammo < 0) data.player.ammo = 0;
                 data.player.cooldown = SHOOTINGCOOLDOWN;
-                sprite->StartPlaying();
+                gunSprite->StartPlaying();
             }
 
         }
@@ -345,7 +347,7 @@ void State_GamePlay::RenderHud() {
         window->draw(*bullet_img,screen_size.x-(i%10)*bullet_img->GetWidth(),screen_size.y-y*bullet_img->GetHeight());
     }
     auto center = window->ScreenCenter();
-    window->draw(sprite,center.x - sprite->GetWidth()/2,center.y*2 - sprite->GetHeight(),sprite->GetCurrentFrameIndex());
+    window->draw(gunSprite, center.x - gunSprite->GetWidth() / 2, center.y * 2 - gunSprite->GetHeight(), gunSprite->GetCurrentFrameIndex());
 }
 
 void State_GamePlay::DebugLoseHP(EventDetails *l_details) {
@@ -357,4 +359,8 @@ void State_GamePlay::DebugLoseHP(EventDetails *l_details) {
 void State_GamePlay::DebugGainHP(EventDetails *l_details) {
     GameData& data = GameData::self();
     if(++data.player.hp > 5) data.player.hp = 5;
+}
+
+void State_GamePlay::GameOver() {
+    m_stateMgr->SwitchTo(StateType::GameOver);
 }

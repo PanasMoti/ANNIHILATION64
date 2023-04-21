@@ -29,6 +29,7 @@ public:
     void KeyReleased(EventDetails* l_details);
     void DebugLoseHP(EventDetails* l_details);
     void DebugGainHP(EventDetails* l_details);
+    void GameOver();
 
 private:
     void RenderBuffer();
@@ -41,7 +42,7 @@ private:
     Texture* bullet_img;
     GameTexture wallTexture;
     GameTexture doorTexture;
-    Sprite* sprite;
+    Sprite* gunSprite;
 };
 
 

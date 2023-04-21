@@ -7,6 +7,7 @@
 #include <sqlite3.h>
 #include "DataBase_Response.h"
 #include "GameData.h"
+#include "config.h"
 
 void State_MainMenu::OnCreate() {
     time_passed = 0.0f;
@@ -68,7 +69,7 @@ void State_MainMenu::Continue(EventDetails *l_details) {
         case 0: {
             DataBase_Response &response = DataBase_Response::self();
             sqlite3 *DB;
-            sqlite3_open("data/storage.db", &DB);
+            sqlite3_open(DB_PATH, &DB);
             const char *query = "SELECT * FROM GAME WHERE PASSWORD = 'NEWGAME';";
             const char *data;
             char *errmsg;

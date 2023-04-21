@@ -20,8 +20,8 @@ public:
 	void clear_screen();
 	void draw(SDL_Texture* texture);
 
-    void draw(const Texture& texture,int x,int y);
-    void draw(const Texture& texture,int2 pos);
+    void draw(const Texture& texture,int x,int y,bool2 isCentered = {false,false});
+    void draw(const Texture& texture,int2 pos,bool2 isCentered = {false,false});
     void draw(const Texture& texture,SDL_Rect dst);
     void draw(const Texture& texture);
     void draw(const std::string& txt,TTF_Font* font,int x,int y, SDL_Color color={255,255,255,255},bool isCentered = false);
@@ -32,7 +32,7 @@ public:
     void draw(SDL_Rect sdlRect,SDL_Color color,bool filled = false);
     void drawShaded(const std::string& str,TTF_Font* font,int2 p,SDL_Color fg = clWHITE,SDL_Color bg = clBLACK,bool isCentered = false);
     void draw_guidlines(const SDL_Color& sdlColor);
-    void draw(Sprite* sprite,int x,int y,int frame);
+    void draw(Sprite* sprite,int x,int y,int frame,bool2 isCentered = {false,false});
 	void display();
 	int2 GetMousePosition() const;
     int2 ScreenCenter() const;

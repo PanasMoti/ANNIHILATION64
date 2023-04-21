@@ -8,6 +8,13 @@
 #define HEIGHT 1080
 #define TITLE "ANNIHILATION64"
 
+#ifdef NDEBUG
+#define DB_PATH "data/storage.db"
+#else
+#define DB_PATH "../data/storage.db"
+#endif
+
+
 
 
 static std::string random_string( size_t length )

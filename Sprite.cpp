@@ -57,13 +57,14 @@ int Sprite::NumOfFrames() const {
 }
 
 void Sprite::StartPlaying() {
+    if(player.first) return;
     player.first = true;
     player.second = 0;
 }
 
 void Sprite::StopPlaying() {
-    player.first = false;
-    player.second = 0;
+    player.first = is_looping;
+    resetPlayer();
 }
 
 void Sprite::Update(float dt) {
@@ -84,5 +85,19 @@ bool Sprite::isPlaying() {
 
 int Sprite::GetCurrentFrameIndex() const {
     return player.second;
+}
+
+void Sprite::SetFPS(int fps) {
+    float s = static_cast<float>(fps);
+    float p = static_cast<float>(NumOfFrames());
+    time_between_frames = p/s;
+}
+
+void Sprite::ToggleLoop() {
+    is_looping = !is_looping;
+}
+
+void Sprite::resetPlayer() {
+    player.second = 0;
 }
 
