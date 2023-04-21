@@ -25,22 +25,27 @@ find_package(nlohmann_json 3.2.0 REQUIRED)
 
 
 # Add executable
-add_executable(${PROJECT_NAME} main.cpp
-        config.h
-        RenderWindow.h RenderWindow.cpp
-        linalg.h BaseState.h
-        EventManager.h EventManager.cpp
-        StateManager.h StateManager.cpp
-        Game.h Game.cpp
-        State_MainMenu.cpp State_MainMenu.h
-        Texture.cpp Texture.h
-        State_LoadGame.cpp State_LoadGame.h
-        State_MapEdit.cpp State_MapEdit.h
-        Map.cpp Map.h
-        State_GamePlay.cpp State_GamePlay.h
-        GameData.h DataBase_Response.h
-        Colors.h picopng.h
-        GameTexture.cpp GameTexture.h Sprite.cpp Sprite.h fileutil.h State_GameOver.cpp State_GameOver.h)
+add_executable(${PROJECT_NAME} sources/main.cpp
+        sources/util/config.h
+        sources/RenderWindow.h sources/RenderWindow.cpp
+        sources/import/linalg.h sources/States/BaseState.h
+        sources/States/Events/EventManager.h sources/States/Events/EventManager.cpp
+        sources/States/StateManager.h sources/States/StateManager.cpp
+        sources/Game.h sources/Game.cpp
+        "sources/States/Main Menu/State_MainMenu.cpp" "sources/States/Main Menu/State_MainMenu.h"
+        sources/gfx/Texture.cpp sources/gfx/Texture.h
+        "sources/States/Load Game/State_LoadGame.cpp" "sources/States/Load Game/State_LoadGame.h"
+        "sources/States/Map Editor/State_MapEdit.cpp" "sources/States/Map Editor/State_MapEdit.h"
+        sources/Map.cpp sources/Map.h
+        sources/States/Gameplay/State_GamePlay.cpp sources/States/Gameplay/State_GamePlay.h
+        sources/util/GameData.h sources/util/DataBase_Response.h
+        sources/util/Colors.h sources/import/picopng.h
+        sources/gfx/GameTexture.cpp sources/gfx/GameTexture.h
+        sources/gfx/Sprite.cpp sources/gfx/Sprite.h
+        sources/util/fileutil.h
+        "sources/States/Game Over/State_GameOver.cpp" "sources/States/Game Over/State_GameOver.h"
+        sources/gfx/GameSprite.cpp sources/gfx/GameSprite.h
+        )
 
 
 

@@ -4,10 +4,10 @@
 
 #ifndef ANNIHILATION64_STATE_GAMEOVER_H
 #define ANNIHILATION64_STATE_GAMEOVER_H
-#include "StateManager.h"
-#include "Texture.h"
-#include "Sprite.h"
-#include "RenderWindow.h"
+#include "../StateManager.h"
+#include "../../gfx/Texture.h"
+#include "../../gfx/Sprite.h"
+#include "../../RenderWindow.h"
 
 class State_GameOver : public BaseState{
 public:

@@ -3,7 +3,7 @@
 //
 
 #include "State_GameOver.h"
-#include "Colors.h"
+#include "../../util/Colors.h"
 
 State_GameOver::State_GameOver(StateManager *l_stateManager) : BaseState(l_stateManager) {
 
@@ -30,7 +30,6 @@ void State_GameOver::OnDestroy() {
 }
 
 void State_GameOver::Activate() {
-    skull->StartPlaying();
     skull->ToggleLoop();
 }
 
@@ -39,6 +38,7 @@ void State_GameOver::Deactivate() {
 }
 
 void State_GameOver::Update(float dt) {
+    skull->StartPlaying();
     skull->Update(dt);
 }
 

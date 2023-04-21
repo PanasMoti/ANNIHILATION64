@@ -4,8 +4,8 @@
 
 #ifndef ANNIHILATION64_STATE_LOADGAME_H
 #define ANNIHILATION64_STATE_LOADGAME_H
-#include "StateManager.h"
-#include "linalg.h"
+#include "../StateManager.h"
+#include "../../import/linalg.h"
 #include <sqlite3.h>
 
 

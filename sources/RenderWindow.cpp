@@ -1,6 +1,6 @@
 #include "RenderWindow.h"
 #include <iostream>
-#include "GameData.h"
+#include "util/GameData.h"
 
 
 RenderWindow::RenderWindow(const char* title, int width, int height)

@@ -4,8 +4,8 @@
 
 #ifndef ANNIHILATION64_STATE_MAPEDIT_H
 #define ANNIHILATION64_STATE_MAPEDIT_H
-#include "StateManager.h"
-#include "Map.h"
+#include "../StateManager.h"
+#include "../../Map.h"
 #include <sqlite3.h>
 class State_MapEdit : public BaseState{
 public:

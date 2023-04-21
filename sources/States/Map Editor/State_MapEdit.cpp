@@ -5,7 +5,7 @@
 #include "State_MapEdit.h"
 #include <iostream>
 #include <fstream>
-#include "config.h"
+#include "../../util/config.h"
 
 State_MapEdit::State_MapEdit(StateManager *l_stateManager) : BaseState(l_stateManager) {
     OnCreate();

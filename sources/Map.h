@@ -9,7 +9,7 @@
 #include <vector>
 #include <ostream>
 #include <SDL2/SDL.h>
-#include "linalg.h"
+#include "import/linalg.h"
 
 using namespace linalg::aliases;
 

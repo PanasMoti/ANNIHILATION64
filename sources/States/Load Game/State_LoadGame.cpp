@@ -4,9 +4,9 @@
 
 #include "State_LoadGame.h"
 #include <iostream>
-#include "GameData.h"
-#include "DataBase_Response.h"
-#include "config.h"
+#include "../../util/GameData.h"
+#include "../../util/DataBase_Response.h"
+#include "../../util/config.h"
 
 State_LoadGame::State_LoadGame(StateManager *l_stateManager) : BaseState(l_stateManager) {
     OnCreate();

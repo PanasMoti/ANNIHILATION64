@@ -3,8 +3,8 @@
 //
 
 #include "Sprite.h"
-#include "fileutil.h"
 #include <iostream>
+#include "../util/fileutil.h"
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
 

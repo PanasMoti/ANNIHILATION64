@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include "Game.h"
-#include "GameData.h"
+#include "util/GameData.h"
 
 
 int main(int argc, char** argv) {

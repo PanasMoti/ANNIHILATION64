@@ -5,9 +5,9 @@
 #include "State_MainMenu.h"
 #include <iostream>
 #include <sqlite3.h>
-#include "DataBase_Response.h"
-#include "GameData.h"
-#include "config.h"
+#include "../../util/DataBase_Response.h"
+#include "../../util/GameData.h"
+#include "../../util/config.h"
 
 void State_MainMenu::OnCreate() {
     time_passed = 0.0f;

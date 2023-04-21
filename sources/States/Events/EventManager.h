@@ -4,10 +4,10 @@
 #include <utility>
 #include <unordered_map>
 #include <string>
-#include "linalg.h"
+#include "../../import/linalg.h"
 #include <functional>
-#include "RenderWindow.h"
-#include "BaseState.h"
+#include "../../RenderWindow.h"
+#include "../BaseState.h"
 
 using namespace linalg::aliases;
 

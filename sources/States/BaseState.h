@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RenderWindow.h"
+#include "../RenderWindow.h"
 class StateManager;
 class EventManager;
 

@@ -4,7 +4,7 @@
 
 #ifndef ANNIHILATION64_STATE_MAINMENU_H
 #define ANNIHILATION64_STATE_MAINMENU_H
-#include "StateManager.h"
+#include "../StateManager.h"
 #include <SDL2/SDL_ttf.h>
 
 class State_MainMenu : public BaseState{

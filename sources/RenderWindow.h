@@ -2,10 +2,10 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
-#include "linalg.h"
-#include "Texture.h"
-#include "Colors.h"
-#include "Sprite.h"
+#include "import/linalg.h"
+#include "gfx/Texture.h"
+#include "util/Colors.h"
+#include "gfx/Sprite.h"
 using namespace linalg::aliases;
 
 class RenderWindow
