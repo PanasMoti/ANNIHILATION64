@@ -52,6 +52,7 @@ public:
     /// changes player.second = 0
     void resetPlayer();
 protected:
+    /// the constructor call this function
     void Init(const char* img,const char* json,SDL_Renderer* renderer);
     std::vector<SDL_Rect> frames;
     std::pair<bool,int> player;
