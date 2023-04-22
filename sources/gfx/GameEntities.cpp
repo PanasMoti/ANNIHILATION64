@@ -24,6 +24,7 @@ int GameEntities::numEntities() const {
 }
 
 void GameEntities::SyncSize() {
+    entities.clear();
     entities.resize(entity.size());
 }
 
@@ -32,7 +33,10 @@ void GameEntities::AddTexture(const GameTexture &gameTexture) {
 }
 
 void GameEntities::SortSprites() {
-    std::sort(entities.begin(),entities.end());
+//    std::sort(entities.begin(),entities.end());
+    std::sort(entities.rbegin(), entities.rend(), [](auto &left, auto &right) {
+        return left.second < right.second;
+    });
 }
 
 void GameEntities::RemoveEntity(int index) {

@@ -51,7 +51,7 @@ private:
     Sprite* gunSprite;
     bool player_shot;
 
-    std::vector<double> ZBuffer;
+    std::vector<float> ZBuffer;
     bool gameOver;
     float2 hit_cooldown;
 

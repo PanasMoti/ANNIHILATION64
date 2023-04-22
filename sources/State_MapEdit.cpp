@@ -195,12 +195,13 @@ void State_MapEdit::SaveMap(EventDetails *l_details) {
 
 void State_MapEdit::Activate() {
     sqlite3_open(DB_PATH,&DB);
-    map.SetSize(map.GetSize());
+    map.SetSize(16,16);
     written_to_db = false;
     custom_pass = random_string(rand()%17 + 1);
     enter_guard = false;
     map_is_valid = true;
     is_not_allowed = false;
+
 }
 
 void State_MapEdit::Deactivate() {

@@ -5,7 +5,7 @@
 #include "State_GamePlay.h"
 #include <iostream>
 #include "gfx/GameEntities.h"
-
+#include <set>
 const char* arr[] = {
         "Forward_Press",
         "Left_Press",
@@ -123,9 +123,9 @@ void State_GamePlay::Activate() {
         sprite.AddEntity(static_cast<float>(item.x) + 0.5,static_cast<float>(item.y) + 0.5,0);
     }
     auto p = gameData.map.GetPlayerSpawn();
-    sprite.AddEntity(static_cast<float>(p.x) -0.5,static_cast<float>(p.y)-0.5,1);
+    sprite.AddEntity(static_cast<float>(p.x) +0.5,static_cast<float>(p.y) + 0.5,1);
     auto l = gameData.map.GetLevelEnd();
-    sprite.AddEntity(static_cast<float>(l.x)-0.5,static_cast<float>(l.y)-0.5,3);
+    sprite.AddEntity(static_cast<float>(l.x) + 0.5,static_cast<float>(l.y) + 0.5,3);
 
     gameOver =false;
 
@@ -390,7 +390,9 @@ void State_GamePlay::RenderBuffer() {
     for(int i = 0; i < numSprites; i++)
     {
         sprite.entities[i].first = i;
-        sprite.entities[i].second = ((posX - sprite.entity[i].x) * (posX - sprite.entity[i].x) + (posY - sprite.entity[i].y) * (posY - sprite.entity[i].y)); //sqrt not taken, unneeded
+        float dx = sprite.entity[i].x - posX;
+        float dy = sprite.entity[i].y - posY;
+        sprite.entities[i].second = dx*dx + dy*dy; //sqrt not taken, unneeded
     }
     sprite.SortSprites();
 
@@ -459,7 +461,7 @@ void State_GamePlay::RenderBuffer() {
                 }
             }
         }
-    }
+    } // SPRITE CASTING
     // -------------------------
      window->update();
 }
@@ -584,7 +586,9 @@ void State_GamePlay::EnemyAI(float dt) {
                 mapY += step.y;
             }
             //Check if ray has hit a wall
-            if (data.map(mapX,mapY) == CellType::Wall || data.map(mapX,mapY) == CellType::Door) { is_seeing_player = false;break; }
+            auto cell = data.map(mapX,mapY);
+            std::set<CellType> vision_blockers = {CellType::Door,CellType::Wall};
+            if (vision_blockers.find(cell) != vision_blockers.end()) { is_seeing_player = false;break; }
 
         } // DDA
         auto l = linalg::length(ray);
