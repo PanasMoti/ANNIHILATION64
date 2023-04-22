@@ -27,7 +27,6 @@ State_GamePlay::State_GamePlay(StateManager *l_stateManager) : BaseState(l_state
 }
 
 void State_GamePlay::OnCreate() {
-//    ZBuffer.resize(GameData::self().res.x);
     EventManager* evMgr = m_stateMgr->GetContext()->eventMgr;
     for(int i = 0; i < 12; i++) {
         if(i  < 6) {
@@ -47,7 +46,7 @@ void State_GamePlay::OnCreate() {
     bullet_img = new Texture(window->loadTexture("assets/bullet.png"));
     bullet_img->Scale(2.0f);
     info_font = window->loadFont("assets/YosterIsland.ttf");
-    info_text = "^press [ESC] to exit the game\n^use [WASD] to move\n^use [F] to shoot\n^use [E] to interact\n^the barrels will restore your ammo\n#~~GOAL~~#\n *kill all the enemies\n *FIND:\n  -green british cat flower";
+    info_text = "^press [ESC] to exit the game\n^use [WASD] to move\n^use [F] to shoot\n^use [E] to interact\n^the barrels restore 10 bullets\n#~~GOAL~~#\n *kill all the enemies\n *FIND:\n  -green british cat flower";
     gunSprite = new Sprite("assets/pistol", window->GetRenderer());
     gunSprite->SetSize(500, 500);
     gunSprite->time_between_frames = 0.1f;
@@ -68,7 +67,6 @@ void State_GamePlay::OnDestroy() {
 
 void State_GamePlay::Activate() {
     player_shot = false;
-//    std::cout << GameData::self().level << std::endl;
     m_stateMgr->GetContext()->window->create_buffer();
     GameData& gameData = GameData::self();
     hit_cooldown = {0.0f,1.0f};
