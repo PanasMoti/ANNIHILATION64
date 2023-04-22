@@ -59,7 +59,7 @@ public:
     void GameOver();
     /// this process a collision between the player and an entity ,
     /// for example if the entity is an enemy, the player loses a health point
-    /// note this function assumes there IS a collision and doesn't check for collision
+    /// \note this function assumes there IS a collision and doesn't check for collision
     /// \param index the index of the entity the player is colliding with
     void PlayerEntityCollision(int index);
 

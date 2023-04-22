@@ -59,6 +59,7 @@ public:
     /// player's input string is empty
     /// \param l_details unused
     void Backspace(EventDetails* l_details);
+
     /// bound to event function, used to submit the input string and check if that password
     /// is found in the database, if it is this function switches the state to the gameplay state
     /// if it is not found in the database it flips a bool value that resposible for showing an error msg
