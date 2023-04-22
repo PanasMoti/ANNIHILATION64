@@ -156,7 +156,7 @@ public:
     /// \param l_name the name of the binding
     /// \param l_func a pointer to the function of the call back
     /// \param l_instance an instance of the T class that implements the function
-    /// \return true
+    /// \return true if the CallBack was Added successfuly to the vector, false otherwise
 	template<typename T>
 	bool AddCallback(StateType l_state, const std::string& l_name,
 		void(T::* l_func)(EventDetails*), T* l_instance)
@@ -166,6 +166,12 @@ public:
 		return itr->second.emplace(l_name, temp).second;
 
 	}
+    /// the opposite of the AddCallBack function, this function Removes a callback from the vector,
+    /// this search the vector for a callback of the state provided and with the name provided
+    /// we define this in the header for symmetry reasons
+    /// \param l_state the state of the callback to remove
+    /// \param l_name the name of the callback to remove
+    /// \return true if removed successfully and false otherwise
 	bool RemoveCallback(StateType l_state, const std::string& l_name) {
 		auto itr = m_callbacks.find(l_state);
 		if (itr == m_callbacks.end()) { return false; }
@@ -175,9 +181,16 @@ public:
 		return true;
 	}
 
+    /// this function matches the SDL_Event with the corresponding EventType and loops thorugh all our bindings and updates
+    /// the ones with right EventType and passes the Key Code
+    /// \param l_event a reference to an SDL_Event object that was pulled from SDL_PollEvents
 	void HandleEvent(SDL_Event& l_event);
+    /// a function to update the Containers
 	void Update();
 
+    /// a function to get the Mouse Position relative to the window
+    /// \param l_wind a pointer to a RenderWindow object
+    /// \return an int2 with the coordinates of the mouse relative to the window
 	int2 GetMousePosition(RenderWindow* l_wind = nullptr) {
 		if (l_wind) {
 			return l_wind->GetMousePosition();
@@ -186,14 +199,23 @@ public:
 		SDL_GetGlobalMouseState(&temp.x, &temp.y);
 		return temp;
 	}
+    /// Setter
+    /// \param l_type a constant reference to a StateType object, which is the type we want to change to
     void SetCurrentState(const StateType& l_type);
 
 private:
+    ///@privatesection
+    /// a function that loads our bindings from our keys.cfg file
 	void LoadBindings();
 
+    ///@property our bindings
 	Bindings m_bindings;
+    ///@property our callbacks
 	Callbacks m_callbacks;
+    ///@property a boolean that represents if our window is in focus, this way if our user is in a different tab, their key presses wont
+    /// be applied
 	bool m_hasFocus;
+    ///@property the type of state that is currently active
 	StateType m_currentState;
 };
 

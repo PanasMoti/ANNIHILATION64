@@ -13,11 +13,7 @@ Game::Game() :m_stateManager(&m_context) {
 	shouldClose = false;
 	m_isFocused = true;
 
-	m_eventManager.AddCallback(StateType::MainMenu,"Window_close", &Game::close, this);
-    m_eventManager.AddCallback(StateType::GamePlay,"Window_close", &Game::close, this);
-    m_eventManager.AddCallback(StateType::LoadGame,"Window_close", &Game::close, this);
-    m_eventManager.AddCallback(StateType::GameOver,"Window_close", &Game::close, this);
-    m_eventManager.AddCallback(StateType::MapEdit,"Window_close", &Game::close, this);
+	m_eventManager.AddCallback(StateType(0),"Window_close", &Game::close, this);
 	m_context.window = window;
 	m_context.eventMgr = &m_eventManager;
 	m_stateManager.SwitchTo(StateType::MainMenu);
@@ -67,12 +63,7 @@ void Game::destroy() {
     SDL_Quit();
     IMG_Quit();
     TTF_Quit();
-    this->m_stateManager.Remove(StateType::MainMenu);
-    this->m_stateManager.Remove(StateType::MapEdit);
-    this->m_stateManager.Remove(StateType::LoadGame);
-    this->m_stateManager.Remove(StateType::GamePlay);
-    this->m_stateManager.Remove(StateType::GameOver);
-
+    this->m_stateManager.Remove(StateType(0));
 }
 
 
