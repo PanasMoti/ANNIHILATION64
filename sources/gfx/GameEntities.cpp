@@ -32,7 +32,7 @@ void GameEntities::AddTexture(const GameTexture &gameTexture) {
     textures.push_back(gameTexture);
 }
 
-void GameEntities::SortSprites() {
+void GameEntities::SortEntities() {
 //    std::sort(entities.begin(),entities.end());
     std::sort(entities.rbegin(), entities.rend(), [](auto &left, auto &right) {
         return left.second < right.second;

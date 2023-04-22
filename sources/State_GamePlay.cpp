@@ -453,7 +453,7 @@ void State_GamePlay::RenderBuffer() {
         float dy = sprite.entity[i].y - posY;
         sprite.entities[i].second = dx*dx + dy*dy; //sqrt not taken, unneeded
     }
-    sprite.SortSprites();
+    sprite.SortEntities();
 
     //after sorting the sprites, do the projection and draw them
     for(int i = 0; i < numSprites; i++)
