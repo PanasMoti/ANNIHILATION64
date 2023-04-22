@@ -42,7 +42,6 @@ add_executable(${PROJECT_NAME} sources/main.cpp
         sources/header_onlys/Colors.h sources/import/picopng.h
         "sources/gfx/GameTexture.cpp" "sources/gfx/GameTexture.h"
         sources/gfx/Sprite.cpp sources/gfx/Sprite.h
-        sources/header_onlys/fileutil.h
         "sources/State_GameOver.cpp" "sources/State_GameOver.h" sources/gfx/GameEntities.cpp sources/gfx/GameEntities.h)
 
 

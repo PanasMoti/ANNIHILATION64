@@ -94,33 +94,6 @@ void RenderWindow::draw(const Texture &texture) {
     SDL_RenderCopy(renderer,texture.SDL_Tex(), nullptr, nullptr);
 }
 
-void RenderWindow::draw_guidlines(const SDL_Color &sdlColor) {
-    int dotSize = 16; // Size of the dots
-    int dotSpace = 16; // Space between the dots
-    auto SDL_DrawPoint = [this] (int2 pos) {
-        SDL_Rect sdlRect = {pos.x-4,pos.y-4,8,8};
-        SDL_RenderFillRect(this->renderer,&sdlRect);
-    };
-    auto SDL_DrawDottedLine = [&dotSize,&dotSpace, this, &SDL_DrawPoint] (int2 start,int2 end)  {
-        int x1 = start.x,   y1=start.y;
-        int x2 = end.x,     y2=end.y;
-        for (int i = x1; i <= x2; i += (dotSize + dotSpace)) {
-            SDL_DrawPoint({i, y1}); // Draw a dot
-        }
-
-        for (int j = y1; j <= y2; j += (dotSize + dotSpace)) {
-            // Draw a dot
-            SDL_DrawPoint({x2, j});
-        }
-    };
-
-
-    auto p = this->ScreenCenter();
-    auto s = this->GetScreenSize();
-    SDL_SetRenderDrawColor(renderer,sdlColor.r,sdlColor.g,sdlColor.b,sdlColor.a);
-    SDL_DrawDottedLine({p.x,0},{p.x,s.y});
-    SDL_DrawDottedLine({0,p.y},{s.x,p.y});
-}
 
 void RenderWindow::draw(SDL_Rect sdlRect, SDL_Color color, bool filled) {
     SDL_SetRenderDrawColor(renderer,color.r,color.g,color.b,color.a);
@@ -137,16 +110,7 @@ void RenderWindow::close() {
     renderer = nullptr;
 }
 
-void RenderWindow::draw(const char *str, TTF_Font *font, int x, int y, SDL_Color color) {
-    SDL_Surface* surface = TTF_RenderText_Solid(font,str,color);
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_Rect r; r.x = x; r.y = y; r.w = surface->w; r.h = surface->h;
-    r.x -= r.w/2;
-    r.y -= r.h/2;
-    SDL_FreeSurface(surface);
-    SDL_RenderCopy(renderer, texture, nullptr, &r);
-    SDL_DestroyTexture(texture);
-}
+
 
 void RenderWindow::destroy() {
     SDL_DestroyRenderer(renderer);
@@ -256,36 +220,9 @@ void RenderWindow::render(int x, int y, SDL_Color color) {
 
 
 
-void RenderWindow::render(int2 point, SDL_Color color) {
-    render(point.x,point.y,color);
-}
 
-void RenderWindow::render_vertical_line(int x, int y0, int y1, SDL_Color color) {
-    SDL_Rect rect = {x,y0,1,y1-y0};
-    uint32_t c = SDL_MapRGBA(buffer.first->format,color.r,color.g,color.b,color.a);
-    SDL_FillRect(buffer.first,&rect,c);
 
-}
 
-void RenderWindow::drawShaded(const std::string &str, TTF_Font *font, int2 p, SDL_Color fg, SDL_Color bg, bool isCentered) {
-    SDL_Surface* surface = TTF_RenderText_Shaded(font,str.c_str(),fg,bg);
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer,surface);
-    SDL_Rect r; r.x = p.x; r.y = p.y; r.w = surface->w; r.h = surface->h;
-    if(isCentered) {
-        r.x -= r.w/2;
-        r.y -= r.h/2;
-    }
-    SDL_FreeSurface(surface);
-    SDL_RenderCopy(renderer, texture, nullptr, &r);
-    SDL_DestroyTexture(texture);
-}
-
-void RenderWindow::render(SDL_Surface* surface, SDL_Rect *srcRect, SDL_Rect *dstRect) {
-
-    SDL_BlitSurface(surface,srcRect,buffer.first,dstRect);
-//    SDL_BlitScaled(surface,srcRect,buffer.first,dstRect);
-    SDL_FreeSurface(surface);
-}
 
 void RenderWindow::render(int x, int y, uint32_t color) {
     auto * const target_pixel = (Uint32 *) ((Uint8 *) buffer.first->pixels
