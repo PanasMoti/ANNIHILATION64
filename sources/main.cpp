@@ -23,6 +23,5 @@ int main(int argc, char** argv) {
 	} // while loop
     game->destroy(); // when we exit the while loop that means we should close the game so we call the destroy function which
     // closes the RenderWindow Object, closes TTF , IMG and SDL, deletes everything and closes
-//	delete game;
 	return 0; // we return 0 for successful execution of the program
 }
