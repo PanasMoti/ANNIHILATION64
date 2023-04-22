@@ -9,7 +9,7 @@
 #include <sqlite3.h>
 
 
-
+///@class a class for the StateType::LoadGame
 class State_LoadGame : public BaseState{
 public:
     /// constructor

@@ -7,6 +7,8 @@
 #include "StateManager.h"
 #include "Map.h"
 #include <sqlite3.h>
+
+///@class a class for the StateType::MapEdit
 class State_MapEdit : public BaseState{
 public:
     /// constructor

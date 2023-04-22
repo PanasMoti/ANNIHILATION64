@@ -7,6 +7,7 @@
 #include "StateManager.h"
 #include <SDL2/SDL_ttf.h>
 
+///@class a class for the StateType::MainMenu
 class State_MainMenu : public BaseState{
 public:
     /// constructor

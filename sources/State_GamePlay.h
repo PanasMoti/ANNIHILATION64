@@ -14,7 +14,7 @@
 #include "gfx/GameEntities.h"
 
 
-
+///@class a class for the StateType::GamePlay
 class State_GamePlay : public BaseState{
     using keyboard = std::unordered_map<int,bool>;
 public:

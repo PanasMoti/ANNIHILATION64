@@ -20,7 +20,7 @@
  * 6.) if the player chooses to go back to the mainmenu then switch the current state to the menu state
  * */
 
-
+///@class a class for the StateType::GameOver
 class State_GameOver : public BaseState{
 public:
     /// constructor
