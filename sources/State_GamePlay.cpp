@@ -41,14 +41,15 @@ void State_GamePlay::OnCreate() {
     RenderWindow* window = m_stateMgr->GetContext()->window;
     doorTexture = GameTexture("assets/door.png");
     wallTexture = GameTexture("assets/redbrick.png");
+    floorTexture = GameTexture("assets/greystone.png");
     heart_img = new Texture(window->loadTexture("assets/heart.png"));
     heart_img->Scale(10.5f);
     bullet_img = new Texture(window->loadTexture("assets/bullet.png"));
     bullet_img->Scale(2.0f);
     info_font = window->loadFont("assets/YosterIsland.ttf");
-    info_text = "^use [WASD] to move\n^use [F] to shoot\n^use [E] to interact\n^the barrels will restore your ammo\n#~~GOAL~~#\n *kill all the enemies\n *FIND:\n  -green british cat flower";
+    info_text = "^press [ESC] to exit the game\n^use [WASD] to move\n^use [F] to shoot\n^use [E] to interact\n^the barrels will restore your ammo\n#~~GOAL~~#\n *kill all the enemies\n *FIND:\n  -green british cat flower";
     gunSprite = new Sprite("assets/pistol", window->GetRenderer());
-    gunSprite->SetSize(500, 250);
+    gunSprite->SetSize(500, 500);
     gunSprite->time_between_frames = 0.1f;
     ZBuffer.resize(GameData::self().res.x);
 
@@ -67,7 +68,6 @@ void State_GamePlay::OnDestroy() {
 
 void State_GamePlay::Activate() {
     player_shot = false;
-    //TODO: process the level into the map;
 //    std::cout << GameData::self().level << std::endl;
     m_stateMgr->GetContext()->window->create_buffer();
     GameData& gameData = GameData::self();
@@ -285,6 +285,67 @@ void State_GamePlay::RenderBuffer() {
     int w = data.res.x; int h = data.res.y;
     auto& sprite = GameEntities::self();
     window->clear_buffer();
+
+
+    //FLOOR CASTING
+    for(int y = 0; y < h; y++)
+    {
+        float dirX = data.player.dir.x,dirY = data.player.dir.y;
+        float planeX = data.player.plane.x,planeY = data.player.plane.y;
+        int screenWidth = data.res.x,screenHeight = data.res.y;
+        float posX = data.player.pos.x,posY = data.player.pos.y;
+        int texWidth = floorTexture.Width(); int texHeight = floorTexture.Height();
+        // rayDir for leftmost ray (x = 0) and rightmost ray (x = w)
+        float rayDirX0 = dirX - planeX;
+        float rayDirY0 = dirY - planeY;
+        float rayDirX1 = dirX + planeX;
+        float rayDirY1 = dirY + planeY;
+
+        // Current y position compared to the center of the screen (the horizon)
+        int p = y - screenHeight / 2;
+
+        // Vertical position of the camera.
+        float posZ = 0.5 * screenHeight;
+
+        // Horizontal distance from the camera to the floor for the current row.
+        // 0.5 is the z position exactly in the middle between floor and ceiling.
+        float rowDistance = posZ / p;
+
+        // calculate the real world step vector we have to add for each x (parallel to camera plane)
+        // adding step by step avoids multiplications with a weight in the inner loop
+        float floorStepX = rowDistance * (rayDirX1 - rayDirX0) / screenWidth;
+        float floorStepY = rowDistance * (rayDirY1 - rayDirY0) / screenWidth;
+
+        // real world coordinates of the leftmost column. This will be updated as we step to the right.
+        float floorX = posX + rowDistance * rayDirX0;
+        float floorY = posY + rowDistance * rayDirY0;
+
+        for(int x = 0; x < screenWidth; ++x)
+        {
+            // the cell coord is simply got from the integer parts of floorX and floorY
+            int cellX = (int)(floorX);
+            int cellY = (int)(floorY);
+
+            // get the texture coordinate from the fractional part
+            int tx = (int)(texWidth * (floorX - cellX)) & (texWidth - 1);
+            int ty = (int)(texHeight * (floorY - cellY)) & (texHeight - 1);
+
+            floorX += floorStepX;
+            floorY += floorStepY;
+
+            Uint32 color;
+
+            // floor
+            color = floorTexture[texWidth * ty + tx];
+            color = (color >> 1) & 8355711; // make a bit darker
+            window->render(x,y,color);
+            // the ceiling is 1 color and symmetrical to the floor, just opposite
+            window->render(x,screenHeight-y-1,clBLACK);
+
+        }
+    }
+
+
     // WALL CASTING
     // -------------------------
     for(int x = 0; x < w; x++) {

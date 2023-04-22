@@ -48,6 +48,7 @@ private:
     Texture* bullet_img;
     GameTexture wallTexture;
     GameTexture doorTexture;
+    GameTexture floorTexture;
     Sprite* gunSprite;
     bool player_shot;
 
