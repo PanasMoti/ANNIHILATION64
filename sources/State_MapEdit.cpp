@@ -6,6 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include "header_onlys/config.h"
+#include "header_onlys/Colors.h"
 
 State_MapEdit::State_MapEdit(StateManager *l_stateManager) : BaseState(l_stateManager) {
     OnCreate();
@@ -17,7 +18,7 @@ void State_MapEdit::OnCreate() {
     enter_guard = false; written_to_db = false;
     time_passed = 0.0f;
     pointer = {0,0};
-    pointer_color = {255,255,0,255};
+    pointer_color = clYELLOW;
     map = Map(16,16);
     menu_font = m_stateMgr->GetContext()->window->loadFont("assets/Doom2016.ttf",160);
     info_font = m_stateMgr->GetContext()->window->loadFont("assets/YosterIsland.ttf",32);
@@ -76,9 +77,9 @@ void State_MapEdit::Draw() {
     int resx = size.x/c;
     int resy = size.y/r;
     if(written_to_db) {
-        window->draw(custom_pass,info_font,center.x,center.y,{255,0,0,255},true);
+        window->draw(custom_pass,info_font,center.x,center.y,clRED,true);
     } else {
-        window->draw(menu_text,menu_font,center.x,center.y - 350,{255,255,255,255},true);
+        window->draw(menu_text,menu_font,center.x,center.y - 350,clWHITE,true);
         int padx = -1; int pady = -1;
         for(int i = 0; i < c;i ++) {
             for(int j = 0; j < r; j++) {
@@ -103,7 +104,7 @@ void State_MapEdit::Draw() {
         window->draw("width:" + std::to_string(map.GetWidth()) + " height: " + std::to_string(map.GetHeight()),info_font,0,0);
     }
     TTF_SetFontWrappedAlign(info_font,TTF_WRAPPED_ALIGN_CENTER);
-    window->draw(info_text,info_font,center.x,2*center.y-100,700,{192,192,192,255},true);
+    window->draw(info_text,info_font,center.x,2*center.y-100,700,clGRAY,true);
     if(!map_is_valid) MapIsntValid();
     if(is_not_allowed) NotAllowed();
     TTF_SetFontWrappedAlign(info_font,TTF_WRAPPED_ALIGN_LEFT);

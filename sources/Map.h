@@ -10,6 +10,7 @@
 #include <ostream>
 #include <SDL2/SDL.h>
 #include "import/linalg.h"
+#include "header_onlys/Colors.h"
 
 using namespace linalg::aliases;
 
@@ -38,13 +39,13 @@ using CellGrid = std::vector<std::vector<CellType>>;
 
 static SDL_Color ToColor(const CellType& cell) {
     SDL_Color rets[] = {
-            {128,128,128,255}, // Empty -> Gray
-            {255,255,255,255}, // Wall -> White
-            {255,0,255,255}, // Door -> Purple
-            {0,255,0,255}, // PlayerSpawn -> Green
-            {255,0,0,255}, // EnemySpawn -> Red,
-            {0,0,255,255}, // ItemSpawn -> Blue,
-            {255,165,0,255} // LevelEnd -> Orange
+            clGRAY, // Empty -> Gray
+            clWHITE, // Wall -> White
+            clPURPLE, // Door -> Purple
+            clLIME, // PlayerSpawn -> Green
+            clRED, // EnemySpawn -> Red,
+            clCYAN, // ItemSpawn -> Blue,
+            clORANGE // LevelEnd -> Orange
     };
     return rets[static_cast<int>(cell)];
 }
