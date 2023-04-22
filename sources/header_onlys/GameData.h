@@ -45,10 +45,19 @@ struct GameData {
     //! this method is very slow and unoptimized, as we are writting to a buffer on the cpu instead of directly writing to the gpu
     //! so we limit our buffer to be only 384x216 pixels and we scale it up when rendering to the screen
     int2 res;
+    //!@property a player object
     Player player;
+    //!@property an std::string variable that will hold the response from the DataBase_Response
     std::string level;
+    //!@property a bool to store if this game is new game or a loaded one, in the future when more of the main
+    //! level will be coded , when starting a new game the player would progress thorugh the levels.
+    //! however a loaded game would only be that specific level
     bool is_new_game;
+    //!@property an integer that holds the player score, the score currently is based upon how many enemies the player has killed
+    //! in the future this could be expended to include other stuff such as, time it took the player
+    //! to complete the level, did the player get hit at all? , how much ammo did the player use? the less the more points they will get,etc..
     int score;
+    //!@breif simple function that init() all the class members ,since this is a singleton class, we cant call the constructor
     void init() {
         res = {384,216};
         player.pos = static_cast<const linalg::vec<float, 2>>(map.GetPlayerSpawn());
@@ -59,16 +68,23 @@ struct GameData {
         is_new_game = false;
         score = 0;
     }
+    /// a setter for the map property, since other members relay on information from the map object, when we are changing
+    /// the map we need to recall the init() function
+    /// \param map1 a constant reference to a Map object
     void SetMap(const Map& map1) {
         map = map1;
         init();
     }
+
+
+
+    /// these are functions that makes this class a Singleton class, for more informations , look singleton class C++ up on google
     GameData(const GameData&) = delete;
     GameData(GameData&&) = delete;
     GameData& operator=(const GameData&) = delete;
     GameData& operator=(GameData&&) = delete;
 private:
-    //! @private
+    //! @private constructor, for a class to be singleton , the constructor must be private or protected
     GameData() = default;
 
 

@@ -37,8 +37,6 @@ public:
     DataBase_Response& operator=(const DataBase_Response&) = delete;
 
 private:
-    //! @property a static pointer to the instance of this class
-    static DataBase_Response* instance;
     //! @attention the constructor is private to make this class a Singleton
     DataBase_Response() = default;
 };
