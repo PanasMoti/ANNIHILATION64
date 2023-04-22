@@ -4,6 +4,9 @@
 class StateManager;
 class EventManager;
 
+
+
+///@class a basic barebones virtual class of a State
 class BaseState
 {
     ///! forward declaration of the class StateManager that will be implemented later on

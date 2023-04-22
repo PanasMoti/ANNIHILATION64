@@ -57,7 +57,7 @@ static SDL_Color ToColor(const CellType& cell) {
             clGRAY, // Empty -> Gray
             clWHITE, // Wall -> White
             clPURPLE, // Door -> Purple
-            clLIME, // PlayerSpawn -> Green
+            clGREEN, // PlayerSpawn -> Green
             clRED, // EnemySpawn -> Red,
             clCYAN, // ItemSpawn -> Blue,
             clORANGE // LevelEnd -> Orange
@@ -107,7 +107,7 @@ static void ChangeSize(CellGrid* grid,int w,int h) {
     *grid = vec;
 }
 
-
+///@class the level layout is made out of a 2d array of integers
 class Map {
 public:
     ///@publicsection

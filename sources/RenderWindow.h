@@ -11,7 +11,6 @@ using namespace linalg::aliases;
 
 ///@class Since SDL is a C library, we needs to keep a pointer of SDL_Window* and SDL_Renderer* to pass everytime to we
 /// want to draw to the screen, this class combines them both and gives us an easier way to draw to the screen
-
 class RenderWindow
 {
 public:

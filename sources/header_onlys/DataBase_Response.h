@@ -10,7 +10,8 @@
 
 ///@class Singleton class that is used to hold the response from a database as std::string
 ///@see "Singleton is a design pattern that ensures that a class can only have one object"
-///@remark this class is a Singleton because this game is meant to be a @b STRICTLY @b SINGLE @b PLAYER @b GAME and the database is stored @b LOCALLY
+///@remark this class is a Singleton because this game is meant to be a @b STRICTLY @b SINGLE @b PLAYER @b GAME
+/// and the database is stored @b LOCALLY
 ///which means that at any point there won't be more than 1 query to the database
 ///@note if we were to extend the game to have multiplayer or access the database through the web we will need to change this class
 ///@attention due to the way the sqlite3.h works, to save the query's response a global/static/extern variable is needed, as
