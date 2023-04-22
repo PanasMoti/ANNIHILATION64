@@ -31,16 +31,39 @@ public:
     /// \param l_details unused
     void ReturnToMenu(EventDetails* l_details);
 
+    /// bound to event function that moves the player's selection up , this loops if player tries to go higher than highest option
+    /// \param l_details unused
     void SelectUp(EventDetails* l_details);
+    /// bound to event function that moves the player's selection down , this loops if player tries to go lower than lowest option
+    /// \param l_details unused
     void SelectDown(EventDetails* l_details);
-    void SelectLeft(EventDetails* l_details);
-    void SelectRight(EventDetails* l_details);
-    void PressSelected(EventDetails* l_details);
-    void SaveMap(EventDetails* l_details);
-    void ChaneMapSize(EventDetails* l_details);
-    void MapIsntValid();
-    void NotAllowed();
 
+    /// bound to event function that moves the player's selection left , this loops if player tries to go more left than most left option
+    /// \param l_details unused
+    void SelectLeft(EventDetails* l_details);
+    /// bound to event function that moves the player's selection right , this loops if player tries to go more right than most right option
+    /// \param l_details unused
+    void SelectRight(EventDetails* l_details);
+
+
+    /// bound to event function that add the character the player's selection is currently on to the string that holds the password the user is trying to write
+    /// \param l_details unused
+    void PressSelected(EventDetails* l_details);
+    /// bound to event function, used to send the map the player created to the database,upon successful insertion
+    /// to the database this flips a boolean var that make the state no longer show the map but display the password it saved it in the database
+    /// \param l_details unused
+    void SaveMap(EventDetails* l_details);
+    /// bound to event function, used to change the map size, either make it bigger by 1 or smaller by 1, maximum size is 32 and minimum is 16
+    /// \param l_details used to decide if it should be enlarged or made smaller
+    void ChaneMapSize(EventDetails* l_details);
+
+    /// function that displays an error message that tells the player that they did something that makes the map not valid
+    void MapIsntValid();
+    /// function that displays an error message that tells the player they cannot change the border
+    void NotAllowed();
+    /// bound to event function, changes the enter_guard boolean to true,
+    /// this is used to make sure that when the player switches to this state the first stop pressing the Enter button so it won't read it as input accidently
+    /// \param l_details unused
     void flip(EventDetails* l_details);
 private:
     Map map;
