@@ -11,11 +11,11 @@
 #define HEIGHT 1080
 #define TITLE "ANNIHILATION64"
 
-#ifdef NDEBUG
+//#ifdef NDEBUG
 #define DB_PATH "data/storage.db"
-#else
-#define DB_PATH "../data/storage.db"
-#endif
+//#else
+//#define DB_PATH "../data/storage.db"
+//#endif
 
 
 
